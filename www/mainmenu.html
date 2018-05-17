@@ -1,0 +1,138 @@
+	<header class="main-header hidden-print"><a href="dashboard.html" class="logo">Lead Generation</a>
+        <nav class="navbar navbar-static-top">
+          <!-- Sidebar toggle button--><a href="#" data-toggle="offcanvas" class="sidebar-toggle"></a>
+			<div  class="navbar-custom-menu">
+				<ul class="top-nav">
+				<!--Notification Menu-->
+					<script>
+						function logout(){
+							sessionStorage.clear();
+							location.href="./index.html";
+							alert("You have Been Logged Out Successfully");
+						}
+					</script>
+					<li class="dropdown notification-menu">
+						<a href="#" data-toggle="dropdown" ng-init="notify()"; ng-click="updatenotificationstatus();" aria-expanded="false" class="dropdown-toggle">
+							<i class="fa fa-bell-o fa-lg"></i>
+							<span class="badge">{{totalnotification}}</span>
+						</a>
+						<ul class="dropdown-menu">
+							<!-- <div ng-show="totalnotification>0"> -->
+								<li class="not-head"  ng-show="totalnotification>0"><a href="">You have a new notifications.</a></li>
+								<li class="not-head" ng-show="totalnotification==0"><a href="">No new notifications.</a></li>
+								<li ng-repeat="x in getusernotificationdata">
+									<a href="javascript:;" class="media">
+										<span class="media-left media-icon">
+											<span class="fa-stack fa-lg">
+												<i class="fa fa-circle fa-stack-2x text-primary"></i><i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+											</span>
+										</span>
+										<div class="media-body">
+											<span class="block">{{x.description}}</span>
+											<span class="text-muted block">{{x.notificationtimestamp | date:"medium"}}</span>
+										</div>
+									</a>
+								</li>
+							<!-- </div> -->
+							<!-- <div ng-show="totalnotification==0">
+								<li class="not-head"><a href="notification.html">No new notifications.</a></li>
+							</div> -->
+						</ul>
+					</li>
+					
+					<!-- <li class="dropdown notification-menu">
+					<a href="#" data-toggle="dropdown" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-bell-o fa-lg"></i></a>
+					<ul class="dropdown-menu">
+						<li class="not-head">You have 4 new notifications.</li>
+						<li>
+							<a href="javascript:;" class="media">
+								<span class="media-left media-icon"><span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-primary"></i><i class="fa fa-envelope fa-stack-1x fa-inverse"></i></span></span>
+								<div class="media-body"><span class="block">Lisa sent you a mail</span><span class="text-muted block">2min ago</span></div>
+							</a>
+						</li>
+						<li>
+							<a href="javascript:;" class="media">
+								<span class="media-left media-icon"><span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-danger"></i><i class="fa fa-hdd-o fa-stack-1x fa-inverse"></i></span></span>
+								<div class="media-body"><span class="block">Server Not Working</span><span class="text-muted block">2min ago</span></div>
+							</a>
+						</li>
+						<li>
+							<a href="javascript:;" class="media">
+								<span class="media-left media-icon"><span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-success"></i><i class="fa fa-money fa-stack-1x fa-inverse"></i></span></span>
+								<div class="media-body"><span class="block">Transaction xyz complete</span><span class="text-muted block">2min ago</span></div>
+							</a>
+						</li>
+						<li class="not-footer"><a href="#">See all notifications.</a></li>
+					</ul>
+				</li> -->
+					
+					<li " class="dropdown notification-menu">
+						<a href="#" onclick="logout()" data-toggle="dropdown" aria-expanded="false" class="dropdown-toggle">
+							<i class="fa fa-sign-out fa-lg"></i> Logout
+						</a>
+					</li>
+					<li  class="dropdown notification-menu">
+						<a href="#"  data-toggle="modal" data-target="#myModal" aria-expanded="false" class="dropdown-toggle">
+							<i></i> 
+						</a>
+					</li> 
+				</ul>
+			</div>
+		</nav>
+    </header>
+      
+    <aside class="main-sidebar hidden-print">
+        <section class="sidebar">
+			<ul class="sidebar-menu">
+				<li>
+					<a href="dashboard.html"><i class="fa fa-dashboard"></i><span>Dashboard</span></a>
+				</li>
+				<li ng-if="usertype=='Admin'" class="treeview">
+					<a href="#"><i class="fa fa-tags"></i><span>Product </span><i class="fa fa-angle-right"></i></a>
+					<ul class="treeview-menu">
+						<li><a href="productmaster.html"><i class="fa fa-circle-o"></i> Product Master</a></li>
+						<li><a href="productdetails.html"><i class="fa fa-circle-o"></i> Product Details</a></li>
+					</ul>
+				</li>
+				<li ng-if="usertype=='Admin' || usertype=='Super User'" class="treeview" >
+					<a href="#"><i class="fa fa-tags"></i><span>User</span><i class="fa fa-angle-right"></i></a>
+					<ul class="treeview-menu">
+						<li><a href="usertype.html"><i class="fa fa-circle-o"></i> User type</a></li>
+						<li><a href="usermaster.html"><i class="fa fa-circle-o"></i> User Master</a></li>
+						<li><a href="customermaster.html"><i class="fa fa-circle-o"></i> Customer Master</a></li>
+					</ul>
+				</li>
+				<li class="treeview" >
+					<a href="#"><i class="fa fa-tags"></i><span>Data</span><i class="fa fa-angle-right"></i></a>
+					<ul class="treeview-menu">
+						<li ><a href="datamaster.html" ng-if="usertype=='Admin' || usertype=='Super User' || usertype=='Operator' "  ><i class="fa fa-circle-o"></i> Data Master</a></li>
+						<!-- <li><a href="datadetails.html"><i class="fa fa-circle-o"></i> Data Details</a></li> -->
+						<li ng-if="usertype=='Admin' || usertype=='Super User' || usertype=='Telecaller'"><a href="leadmaster.html"><i class="fa fa-circle-o"></i> Lead Master</a></li>
+						<li ng-if="usertype=='Telecaller'"><a href="telecaller.html"><i class="fa fa-circle-o"></i> Calling Data</a></li>
+					</ul>
+				</li>
+				<li>
+					<a ng-if="usertype=='Admin'  || usertype=='Telecaller' " href="interactionmaster.html"><i class="fa fa-commenting"></i><span>Interaction</span></a>
+				</li>
+				<li>
+					<a ng-if="usertype=='Admin' " href="planmaster.html"><i class="fa fa-line-chart"></i><span> Plan</span></a>
+				</li>
+				<li>
+					<a ng-if="usertype=='Admin' || usertype=='Super User' "  href="salesmaster.html"><i class="fa fa-comments"></i><span> Sales</span></a>
+				</li>
+				<li>
+					<a ng-if="usertype=='Admin' || usertype=='Super User'" href="receiptsmaster.html"><i class="fa fa-tags"></i><span> Receipts Master</span></i></a>
+				</li>
+				<li>
+					<a href="changepassword.html"><i class="fa fa-inr"></i><span> Change Password</span></a>
+				</li> 
+			</ul>
+        </section>
+    </aside>
+      
+    <!-- Javascripts-->
+	<script src="js/pace.min.js"></script>
+    <script src="js/main.js"></script> 
+    
+    
+ 

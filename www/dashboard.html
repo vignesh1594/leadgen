@@ -1,0 +1,334 @@
+<html>
+
+<head>
+    <link rel='stylesheet' href='css/main.css' type='text/css'>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' href='css/bootstrap.min.css'>
+    <link href='js/jquery.bootgrid.css' rel='stylesheet'>
+    <script src='js/jquery-3.1.1.js'></script>
+	<!-- <script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script> -->
+	<script src="js/socket.io.js"></script>
+    <script src='js/jquery.slimscroll.js'></script>
+    <script src='js/angular.js'></script>
+    <script src='js/angular-route.min.js'></script>
+    <script src='js/ui-bootstrap-tpls-1.1.1.min.js'></script>
+    <script src='js/bootstrap-3.3.7.js'></script>
+    <script src='cjs/index.js'></script>
+	<script src="js/amcharts.js"></script>
+	
+	<script src="js/serial.js"></script>
+	<script src="js/light.js"></script>
+	
+    <style type='text/css'>
+        #footer {
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+            left: 0;
+            text-align: center;
+            height: 20px;
+            background: #E6E4E4;
+        }
+        
+        .input-group .icon-addon .form-control {
+            border-radius: 0;
+        }
+        
+        .icon-addon {
+            position: relative;
+            color: #555;
+            display: block;
+        }
+        
+        .icon-addon:after,
+        .icon-addon:before {
+            display: table;
+            content: ' ';
+        }
+        
+        .icon-addon:after {
+            clear: both;
+        }
+        
+        .icon-addon.addon-md .glyphicon,
+        .icon-addon .glyphicon,
+        .icon-addon.addon-md .fa,
+        .icon-addon .fa {
+            position: absolute;
+            z-index: 2;
+            left: 10px;
+            font-size: 14px;
+            margin-left: -2.5px;
+            text-align: center;
+            padding: 10px 0;
+            top: 1px
+        }
+        
+        .icon-addon.addon-lg .form-control {
+            line-height: 1.33;
+            height: 30px;
+            font-size: 13px;
+            padding: 10px 16px 10px 40px;
+        }
+        
+        .icon-addon.addon-lg .fa,
+        .icon-addon.addon-lg .glyphicon {
+            font-size: 13px;
+            margin-left: 0;
+            left: 11px;
+            top: -1px;
+            color: #512e90;
+        }
+    </style>
+</head>
+
+<body >
+<div ng-app='indexApp' ng-controller='indexController' ng-init="getindustryanalytics()">
+    <div class="wrapper">
+        <div ng-include="'mainmenu.html'"></div>
+		<section class="wrapper">
+			<div class="content-wrapper">
+				<div id="sound"></div>
+				<div class="page-title">
+					<div>
+						<h1><i class='fa fa-dashboard'></i> DASHBOARD</h1>	
+					</div>
+				</div>
+				<div class="panel-body">
+					<div class="col-sm-4" ng-init="listprocessmaster()">
+						<a href="processmaster.html" style="text-decoration:none;">
+							<div class="widget-small info"><i class="icon fa fa-tasks fa-3x"></i>
+								<div class="info">
+									<label>Total Processes</label>
+									<p> <b>{{ listprocessmasterdata.length }}</b></p>
+									<!-- <p> <b>Today's - {{productcount}}</b></p>  -->
+								</div>
+							</div>
+						</a>
+					</div>
+					<div class="col-sm-4" ng-init="listcustomermaster()">
+						<a href="customermaster.html" style="text-decoration:none">
+						<div class="widget-small warning"><i class="icon fa fa-users fa-3x"></i>
+							<div class="info">
+								<label>Total Customers</label>
+								<p><b>{{ listcustomermasterdata.length }}</b></p>
+							<!-- <p> <b>Today's - {{totalpayment6}}</b></p>  -->
+							</div>
+							</div>
+						</a>
+					</div>
+					
+					<div class="col-sm-4" ng-init="listmachine()">
+						<a href="machinetest.html" style="text-decoration:none">
+							<div class="widget-small info"><i class="icon fa fa-cogs fa-3x"></i>
+								<div class="info">
+								<label>Total Machines</label>
+								<p> <b>{{ listmachinedata.length }}</b></p>
+								<!-- <p> <b>Today's - {{productcount}}</b></p>  -->
+								</div>
+							</div>
+						</a>
+					</div>
+					<div class="col-sm-4" ng-init="listenquirymaster()">
+						<a href="enquirymaster.html" style="text-decoration:none">
+							<div class="widget-small warning"><i class="icon fa fa-pencil-square-o fa-3x"></i>
+								<div class="info">
+									<label>Total Enquires</label>
+									<p><b>{{ listenquirymasterdata.length }}</b></p>
+									<!-- <p> <b>Today's - {{totalpayment6}}</b></p>  -->
+								</div>
+							</div>
+						</a>
+					</div>
+					
+					<div class="col-sm-4" ng-init="listusermaster()">
+						<a href="usermaster.html" style="text-decoration:none">
+							<div class="widget-small info"><i class="icon fa fa-users fa-3x"></i>
+							
+								<div class="info">
+									<label>Total Users</label>
+								<!-- 	<h4>Total Users</h4> -->
+									<p><b>{{ listusermasterdata.length }}</b></p>
+									<!-- <p> <b>Today's - {{totalpayment6}}</b></p>  -->
+								</div>
+							</div>
+						</a>
+					</div>
+					
+					<div class="col-sm-4" ng-init="listconfirmmaster()">
+						<a href="workorder.html" style="text-decoration:none">
+							<div class="widget-small warning"><i class="icon fa fa-users fa-3x"></i>
+							  <div class="info">
+								<label>Confirmed Workorder</label>
+								<p><b>{{ listconfirmmasterdata.length }}</b></p>
+								<!-- <p> <b>Today's - {{totalpayment6}}</b></p>  -->
+							  </div>
+							</div>
+						</a>
+					</div>
+				</div>
+			
+				<div class="row clearfix">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="card">
+                        <div class="header">
+                            <h2>Sales Officer's Performance</h2>
+                        </div>
+                        <div class="body">
+                       <div id="chartdiv" style="width: 100%;height: 350px;font-size: 11px;"></div>	
+						
+						
+                        </div>
+                    </div>
+                </div>
+            </div>
+		<!-- <div id="chartContainer" style="height: 300px; width: 100%;">
+		</div>
+		<button id="addDataPoint">Add Data Point</button>  
+<button id="updateDataPoint">Update Data Point</button> -->
+		<!-- <div class="panel-body">
+			<div class="col-lg-6" ng-init='listcircular()'>
+				<div class="panel panel-warning " ng-repeat='circular in listcirculardata'> 
+					<div class="panel panel-heading">
+						<center><span>{{circular.circularsubject }}</span></center>
+					</div>
+					<div class='panel-body'>
+						<span style="float:right;">{{circular.circulardate | date}}</span><br><br>
+						<p style="margin-left:5%"> {{circular.circular }} </p>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-6" ng-init='listcircular()'>
+				<div class="panel panel-warning " ng-repeat='circular in listcirculardata'> 
+					<div class="panel panel-heading">
+						<center><span>{{circular.circularsubject }}</span></center>
+					</div>
+					<div class='panel-body'>
+						<span style="float:right;">{{circular.circulardate | date}}</span><br><br>
+						<p style="margin-left:5%"> {{circular.circular }} </p>
+					</div>
+				</div>
+			</div>
+		</div> -->
+		
+		
+	
+		
+			</div>
+		
+
+	
+		
+
+
+<!-- <div id="App2"  ng-app='enquirymasterApp' ng-controller='enquirymasterController'>
+    <div class="wrapper">
+        <div ng-include="'mainmenu.html'"></div>
+        <div class="content-wrapper">
+            <div class="page-title">
+                <div>
+                    <h1><i class='fa fa-dashboard'></i> DASHBOARD</h1>	
+				</div>
+					 <h6>M3 Shop</h6> 
+		
+      
+            </div>
+			 <div style class="col-lg-3 col-md-6  pull-left" ng-init="listenquirymaster()">
+		
+						<a href="enquirymaster.html"><div class="widget blue darken-3">
+							<div class="widget-content padding">
+									<i class="fa fa-tasks" style="size:250px; color:blue;margin-left:5%;"></i>
+								<div class="text-box">
+									<p class="text-left" style="margin-left:4%;color:blue;">TOTAL <b>PROCESSES</b>
+									<h2 class="text-left" style="margin-left:10%;color:blue;"><span>{{listenquirymasterdata.length}}</span></h2>
+									<div class="clearfix"></div>
+									</p>
+								</div>
+							</div>
+							<div class="widget-footer">
+								<div class="row">
+									<div class="col-sm-12">
+										<i class="rel-change"></i> <b></b>
+									</div>
+								</div>
+								<div class="clearfix"></div>
+							</div>
+						</div></a>
+						<br>
+					</div>
+</div></div></div> -->
+
+
+
+			<!-- 		<div class="col-lg-3 col-md-6  pull-right" ng-init="listenquirymaster()">
+						<a href="Purchase.html"><div class="widget teal darken-1">
+							<div class="widget-content padding">
+									<i class="fa fa-inr" style="size:250px;color:white;margin-left:5%;"></i>
+								<div class="text-box">
+									<p class="text-right" style="margin-right:4%;color:white;">TOTAL <b>Purches Order Amount</b>
+									<h2 class="text-right" style="margin-right:10%;color:white;"><span>{{listenquirymasterdata.length}}</span></h2>
+									<div class="clearfix"></div>
+									</p>
+								</div>
+							</div>
+							<div class="widget-footer">
+								<div class="row">
+									<div class="col-sm-12">
+										<i class="rel-change"></i> <b></b>
+									</div>
+								</div>
+								<div class="clearfix"></div>
+							</div>
+						</div></a>
+						<br>
+					</div> -->
+					<!-- <div class="col-lg-3 col-md-6  pull-right">
+						<a href="Billing.html"><div class="widget indigo accent-2">
+							<div class="widget-content padding">
+									<i class="fa fa-inr" style="size:250px; color:white;margin-left:5%;"></i>
+								<div class="text-box">
+									<p class="text-right" style="margin-right:4%;color:white;">TOTAL <b>Bill Amount</b>
+									<h2 class="text-right" style="margin-right:10%;color:white;"><span>{{totalpoamount[0].totalbillamount|number:2}}</span></h2>
+									<div class="clearfix"></div>
+									</p>
+								</div>
+							</div>
+							<div class="widget-footer">
+								<div class="row">
+									<div class="col-sm-12">
+										<i class="rel-change"></i> <b></b>
+									</div>
+								</div>
+								<div class="clearfix"></div>
+							</div>
+						</div></a>
+						<br>
+					</div>
+				<div class="col-lg-3 col-md-6 pull-right" ng-init="ListProducts()">
+						<a href="products.html"><div class="widget red accent-3">
+							<div class="widget-content padding">
+									<i class="fa fa-product-hunt" style="size:250px; color:white;margin-left:5%;"></i>
+								<div class="text-box">
+									<p class="text-right" style="margin-right:4%;color:white;">TOTAL <b>Products</b>
+									<h2 class="text-right" style="margin-right:10%;color:white;"><span>{{ProductsList.length}}</span></h2>
+									<div class="clearfix"></div>
+									</p>
+								</div>
+							</div>
+							<div class="widget-footer">
+								<div class="row">
+									<div class="col-sm-12">
+										<i class="rel-change"></i> <b></b>
+									</div>
+								</div>
+								<div class="clearfix"></div>
+							</div>
+						</div>
+						</a>
+						<br>
+					</div> -->
+	</section>	
+</body>
+
+</html>

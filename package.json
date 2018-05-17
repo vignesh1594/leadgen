@@ -1,0 +1,20 @@
+{
+  "name": "DTDS",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Rahulkumar Daga",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.14.2",
+    "express": "^4.15.4",
+    "jsonwebtoken": "^5.5.4",
+    "morgan": "^1.6.1",
+    "multer": "^1.1.0",
+    "mysql": "^2.10.2",
+    "socket.io": "^2.0.3"
+  }
+}

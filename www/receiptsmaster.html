@@ -1,0 +1,646 @@
+<html>
+
+<head>
+    <link rel='stylesheet' href='css/main.css' type='text/css'>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' href='css/bootstrap.min.css'>
+    <link href='js/jquery.bootgrid.css' rel='stylesheet'>
+    <script src='js/jquery-3.1.1.js'></script>
+    <script src='js/jquery.slimscroll.js'></script>
+    <script src='js/angular.js'></script>
+    <script src='js/angular-route.min.js'></script>
+    <script src='js/ui-bootstrap-tpls-1.1.1.min.js'></script>
+    <script src='js/bootstrap-3.3.7.js'>
+    </script>
+    <script src='cjs/receiptsmaster.js'></script>
+    <style type='text/css'>
+        #footer {
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+            left: 0;
+            text-align: center;
+            height: 20px;
+            background: #E6E4E4;
+        }
+        
+        .input-group .icon-addon .form-control {
+            border-radius: 0;
+        }
+        
+        .icon-addon {
+            position: relative;
+            color: #555;
+            display: block;
+        }
+        
+        .icon-addon:after,
+        .icon-addon:before {
+            display: table;
+            content: ' ';
+        }
+        
+        .icon-addon:after {
+            clear: both;
+        }
+        
+        .icon-addon.addon-md .glyphicon,
+        .icon-addon .glyphicon,
+        .icon-addon.addon-md .fa,
+        .icon-addon .fa {
+            position: absolute;
+            z-index: 2;
+            left: 10px;
+            font-size: 14px;
+            margin-left: -2.5px;
+            text-align: center;
+            padding: 10px 0;
+            top: 1px
+        }
+        
+        .icon-addon.addon-lg .form-control {
+            line-height: 1.33;
+            height: 30px;
+            font-size: 13px;
+            padding: 10px 16px 10px 40px;
+        }
+        
+        .icon-addon.addon-lg .fa,
+        .icon-addon.addon-lg .glyphicon {
+            font-size: 13px;
+            margin-left: 0;
+            left: 11px;
+            top: -1px;
+            color: #512e90;
+        }
+    </style>
+</head>
+
+<body ng-app='receiptsmasterApp' ng-controller='receiptsmasterController'>
+    <div class="wrapper">
+        <div ng-include="'mainmenu.html'"></div>
+        <div class="content-wrapper">
+            <div class="page-title">
+                <div>
+                    <h1><i class='fa fa-dashboard'></i> Receipt Master</h1></div>
+                <div><a href='' data-toggle='modal' data-target='#myModalAdd' class='btn btn-primary btn-flat'><i class='fa fa-lg fa-plus'></i> <b>ADD</b></a></div>
+            </div>
+            <div class="modal modal-overlay" id="myModalAdd" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header" style="background-color:#512e90;color:white">
+                            <button type="button" class="pull-right" data-dismiss="modal" style="background-color:#512e90;color:white">X</button>
+                            <h4 class='modal-title' style='text-align:center'>ADD Receipt Master </h4> </div>
+                        <div class="modal-body">
+                            <form class="form-horizontal" role="form" name="add_member">
+                                <div class='form-group' ng-init="listsalereceipt()">
+                                    
+                                    <div class='col-sm-6'>
+										<label >sales </label>
+                                       <!--  <input type='text' class='form-control' ng-model='receiptsmasteradd.salesid' /> -->
+										<select type="text" class="form-control"  ng-model="receiptsmasteradd.sales" ng-change="onselectsale(receiptsmasteradd.sales)" ng-options="obj as obj.user for obj in listsalereceiptdata | filter:$viewValue">
+										<option value="">Select</option>
+										</select>
+                                    </div>
+									
+                                    <!-- <div class='col-sm-6'>
+										<label >Client</label>
+                                        <input type='text' class='form-control' ng-model='receiptsmasteradd.clientid' />
+                                    </div> -->
+                                </div>
+                                <div class='form-group'>
+                                    <div class='col-sm-6' ng-init="listplan()">
+										<label >Plan</label>
+										<select type="text" class="form-control" ng-model="receiptsmasteradd.planid" ng-options="obj.planid
+											as obj.planname for obj in plandata | filter:$viewValue" ng-change="onselectplan(salesmasteradd.planid);gettotalamount(salesmasteradd.quotedamount)" disabled >
+											
+										</select>
+                                    </div>
+									
+                                    <div class='col-sm-6'>
+										 <label >Quoted Amount</label>
+                                        <input type='text' class='form-control' ng-model='receiptsmasteradd.amount' readonly />
+                                    </div>
+                                </div>
+								 <div>
+									<table class="table">
+										<thead>
+											<th class="col-sm-3" >Received Amount</th>
+											<th class="col-sm-3" ng-if="receiptsmasteradd.statecode==27" >CGST(%)</th>
+											<th class="col-sm-3" ng-if="receiptsmasteradd.statecode==27" >SGST(%)</th>
+											<th class="col-sm-3" ng-if="receiptsmasteradd.statecode!=27" >IGST(%)</th>
+											<th class="col-sm-3" >Total Amount</th>
+											<!-- <th class="col-sm-4" >Project Incharge</th> -->
+										</thead>
+										<tbody>
+											<tr >
+												
+												<td>
+													<input type='number' class='form-control' ng-model='receiptsmasteradd.recievedamount' />
+												</td>
+												<td ng-if="receiptsmasteradd.statecode==27">
+													<input type='number' class='form-control' ng-model='receiptsmasteradd.cgst' />
+												</td>
+												<td ng-if="receiptsmasteradd.statecode==27">
+													<input type='number' class='form-control' ng-model='receiptsmasteradd.sgst' />
+												</td>
+												<td ng-if="receiptsmasteradd.statecode!=27">
+													<input type='number' class='form-control' ng-model='receiptsmasteradd.igst' />
+												</td>
+												<td>
+													<input type='number' class='form-control' ng-value="receiptsmasteradd.totalamount=receiptsmasteradd.recievedamount-0+ +(receiptsmasteradd.recievedamount*0.18)" ng-model='receiptsmasteradd.totalamount' readonly />
+												</td>
+												
+												
+											</tr>
+											<tr>
+												<td colspan="3" ng-if="receiptsmasteradd.statecode==27">
+													Total Amount Received:
+												</td>
+												<td colspan="2" ng-if="receiptsmasteradd.statecode!=27">
+													Total Amount Received:
+												</td>
+												<td>
+													<input type='number' class='form-control' ng-model='receiptsmasteradd.totalamountrecieved' readonly />
+												</td>
+											</tr>
+											<tr>
+												<td colspan="3" ng-if="receiptsmasteradd.statecode==27">
+													Balance:
+												</td>
+												<td colspan="2" ng-if="receiptsmasteradd.statecode!=27">
+													Balance:
+												</td>
+												<td>
+													<input type='number' class='form-control' ng-value="receiptsmasteradd.balance=(receiptsmasteradd.amount)-0+ -(receiptsmasteradd.totalamountrecieved)-0+ -receiptsmasteradd.totalamount" ng-model='receiptsmasteradd.balance' readonly />
+												</td>
+											</tr>
+										</tbody>
+									</table>
+									</div> 
+                               <!--  <div class='form-group'>
+                                    <label class='col-sm-3 control-label '>Received Amount</label>
+                                    <div class='col-sm-8'>
+                                        <input type='text' class='form-control' ng-model='receiptsmasteradd.recievedamount' />
+                                    </div>
+                                </div>
+								<div class='form-group' ng-if="receiptsmasteradd.statecode==27" >
+									<label class='col-sm-3 control-label ' >CGST(%)</label>
+                                    <div class='col-sm-8'>
+										
+                                        <input type='text' class='form-control' ng-model='receiptsmasteradd.cgst' />
+                                    </div>
+									 
+                                   
+                                </div> 
+								<div class='form-group' ng-if="receiptsmasteradd.statecode==27" >
+									<label class='col-sm-3 control-label '>SGST(%)</label>
+									<div class='col-sm-8'>
+										
+                                        <input type='text' class='form-control' ng-model='receiptsmasteradd.sgst' />
+                                    </div>
+                                </div>
+								<div class='form-group' ng-if="receiptsmasteradd.statecode!=27">
+                                    <label class='col-sm-3 control-label '>IGST(%)</label>
+                                    <div class='col-sm-8'>
+                                        <input type='text' class='form-control' ng-model='receiptsmasteradd.igst' />
+                                    </div>
+                                </div>
+								<div class='form-group'>
+                                    <label class='col-sm-3 control-label '>Total Amount</label>
+                                    <div class='col-sm-8'>
+                                        
+										<input type='text' class='form-control' ng-value="receiptsmasteradd.totalamount=receiptsmasteradd.recievedamount-0+ +(receiptsmasteradd.recievedamount*0.18)" ng-model='receiptsmasteradd.totalamount' readonly />
+                                    </div>
+									 
+                                    
+                                </div> -->
+								<!-- <div class='form-group'>
+                                    <label class='col-sm-3 control-label '>Total Amount Received</label>
+                                    <div class='col-sm-8'>
+                                        
+										<input type='text' class='form-control' ng-model='receiptsmasteradd.totalamountrecieved' readonly />
+                                    </div>
+									 
+                                    
+                                </div>
+								<div class='form-group'>
+									<label class='col-sm-3 control-label ' >Balance</label>
+									<div class='col-sm-8'>
+										
+                                        <input type='text' class='form-control' ng-value="receiptsmasteradd.balance=(receiptsmasteradd.amount)-0+ -(receiptsmasteradd.totalamountrecieved)-0+ -receiptsmasteradd.totalamount" ng-model='receiptsmasteradd.balance' readonly />
+                                    </div>
+                                </div> -->
+                                <!-- <div class='form-group'>
+                                    
+                                    <div class='col-sm-6'>
+                                        <label >Total Amount Received</label>
+										<input type='text' class='form-control' ng-model='receiptsmasteradd.totalamountrecieved' />
+                                    </div>
+									 
+                                    <div class='col-sm-6'>
+										<label >Balance</label>
+                                        <input type='text' class='form-control' ng-model='receiptsmasteradd.balance' />
+                                    </div>
+                                </div> -->
+                               <div class='form-group'>
+									<label class="col-sm-3">Mode of Payment</label>
+									<div class='col-sm-8' ng-init='receiptsmasteradd.mode="Cash"'>
+										<label class="radio-inline">
+											<input type="radio" ng-model="receiptsmasteradd.mode" value="Cash" name="optradio" required >Cash
+										</label>
+										<label class="radio-inline">
+											<input type="radio" ng-model="receiptsmasteradd.mode" value="Cheque" name="optradio" required>Cheque
+										</label>
+										<label class="radio-inline">
+											<input type="radio" ng-model="receiptsmasteradd.mode" value="Demand Draft" name="optradio" required>DD
+										</label>
+										<label class="radio-inline">
+											<input type="radio" ng-model="receiptsmasteradd.mode" value="NEFT" name="optradio" required>NEFT
+										</label>
+										<!-- <label class="radio-inline">
+											<input type="radio" ng-model="receiptsmasteradd.mode" value="TT" name="optradio" required>TT
+										</label> -->
+									</div>
+								</div>
+								
+								<div ng-if="receiptsmasteradd.mode=='Cheque'|| receiptsmasteradd.mode=='Demand Draft'" class='form-group'>
+									<div class='col-sm-4'>
+										<label>Chq./DD No.</label>
+										<input type='number' class='form-control' ng-model='receiptsmasteradd.chequeno' />
+									</div>
+									<div class='col-sm-4'>
+										<label>Chq./ DD Date</label>
+										<input type='date' class='form-control' ng-model='receiptsmasteradd.chequedate' />
+									</div>
+									<div class='col-sm-4'>
+										<label>Drawn Bank</label>
+										<input type='text' class='form-control' ng-model='receiptsmasteradd.bank' />
+									</div>
+								</div>
+								
+								<div ng-if="receiptsmasteradd.mode=='NEFT'||receiptsmasteradd.mode=='TT'" class="form-group">
+									<div class="col-sm-4">
+										<label>Payment Date</label>
+										<input type='date' class='form-control' ng-model='receiptsmasteradd.chequedate' />
+									</div>
+									<div class="col-sm-4">
+										<label ng-if="receiptsmasteradd.mode=='NEFT'" >UTR No.</label>
+										<label ng-if="receiptsmasteradd.mode=='TT'" >TReference No.</label>
+										<input type='text' class='form-control' ng-model='receiptsmasteradd.utrno' />
+									</div>
+								</div>
+								
+								<br>
+								<div class="form-group" >
+									<label class="col-sm-3">Remark </label>
+									<div class="col-sm-6">
+										<textarea class="form-control" ng-model="receiptsmasteradd.remark"></textarea>
+									</div>
+								</div>
+								<div>
+								<table class="table" ng-if="getparticularsaleiddata.length>0">
+										<thead>
+											<th class="col-sm-3" style="background-color:lightgreen" >Receipt No.</th>
+											<th class="col-sm-4" style="background-color:lightgreen" >Receipt Date</th>
+											<th class="col-sm-5"  style="background-color:lightgreen">Amount</th>
+											<!-- <th class="col-sm-4" >Project Incharge</th> -->
+										</thead>
+										<tbody>
+											<tr ng-repeat="x in getparticularsaleiddata">
+												<td ><center>
+												{{x.receiptid}}	</center>
+												</td>
+												<td><center>
+													{{x.creationdate |date}}</center>
+												</td>
+												<td><center>
+													{{x.totalamount |number:2}}</center>
+												</td>
+												
+												
+											</tr>
+										</tbody>
+									</table>
+								</div>
+                                <!-- <div class='form-group'>
+                                    <label class='col-sm-3 control-label '>Cheque/DD No.</label>
+                                    <div class='col-sm-8'>
+                                        <input type='text' class='form-control' ng-model='receiptsmasteradd.chq_dd_no' />
+                                    </div>
+                                </div>
+                                <div class='form-group'>
+                                    <label class='col-sm-3 control-label '>Cheque/DD Date</label>
+                                    <div class='col-sm-8'>
+                                        <input type='text' class='form-control' ng-model='receiptsmasteradd.chq_dd_date' />
+                                    </div>
+                                </div>
+                                <div class='form-group'>
+                                    <label class='col-sm-3 control-label '>Bank Name</label>
+                                    <div class='col-sm-8'>
+                                        <input type='text' class='form-control' ng-model='receiptsmasteradd.bank' />
+                                    </div>
+                                </div> 
+                                <div class='form-group'>
+                                    <label class='col-sm-3 control-label '>UTR No.</label>
+                                    <div class='col-sm-8'>
+                                        <input type='text' class='form-control' ng-model='receiptsmasteradd.utrno' />
+                                    </div>
+                                </div>-->
+                            </form>
+                        </div>
+                        <div class='modal-footer'>
+                            <div class='form-actions'>
+                                <div class="row">
+                                    <div class="col-lg-offset-6 col-lg-4">
+                                        <input type='button' class='btn btn-primary' value='submit' ng-click='addreceiptsmaster()'>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal modal-overlay" id="myModalEdit" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header" style="background-color:#512e90;color:white">
+                            <button type="button" class="pull-right" data-dismiss="modal" style="background-color:#512e90;color:white">X</button>
+                            <h4 class='modal-title' style='text-align:center'>EDIT Receipt Master </h4> </div>
+                        <div class='modal-body'>
+                            <form class='form-horizontal' role='form' name='edit_member' ng-repeat='receiptsmasteredit in getreceiptsmasterdata'>
+                                <div class='form-group'>
+                                    <label class='col-sm-3 control-label'>sales </label>
+                                    <div class='col-sm-8'>
+                                        <input class='form-control' type='text' ng-model='receiptsmasteredit.sale' readonly />
+                                    </div>
+                                </div>
+                                <div class='form-group'>
+                                    <label class='col-sm-3 control-label'>Plan</label>
+                                    <div class='col-sm-8'>
+                                        <input class='form-control' type='text' ng-model='receiptsmasteredit.plan' readonly  />
+                                    </div>
+                                </div>
+                                <div class='form-group'>
+                                    <label class='col-sm-3 control-label'>Total Amount</label>
+                                    <div class='col-sm-8'>
+                                        <input class='form-control' type='text' ng-model='receiptsmasteredit.amount' readonly />
+                                    </div>
+                                </div>
+								
+								<div>
+									<table class="table">
+										<thead>
+											<th class="col-sm-3" >Received Amount</th>
+											<th class="col-sm-3" ng-if="receiptsmasteredit.igst==null || receiptsmasteredit.cgst>0 || receiptsmasteredit.sgst>0" >CGST(%)</th>
+											<th class="col-sm-3" ng-if="receiptsmasteredit.igst==null || receiptsmasteredit.cgst>0 || receiptsmasteredit.sgst>0" >SGST(%)</th>
+											<th class="col-sm-3" ng-if="receiptsmasteredit.cgst==null || receiptsmasteredit.sgst==null || receiptsmasteredit.igst>0" >IGST(%)</th>
+											<th class="col-sm-3" >Total Amount</th>
+										</thead>
+										<tbody>
+											<tr >
+												
+												<td>
+													<input type='number' class='form-control' ng-model='receiptsmasteredit.recievedamount' />
+												</td>
+												<td ng-if="receiptsmasteredit.igst==null || receiptsmasteredit.cgst>0 || receiptsmasteredit.sgst>0">
+													<input type='number' class='form-control' ng-model='receiptsmasteredit.cgst' readonly />
+												</td>
+												<td ng-if="receiptsmasteredit.igst==null || receiptsmasteredit.cgst>0 || receiptsmasteredit.sgst>0">
+													<input type='number' class='form-control' ng-model='receiptsmasteredit.sgst' readonly />
+												</td>
+												<td ng-if="receiptsmasteredit.cgst==null || receiptsmasteredit.sgst==null || receiptsmasteredit.igst>0">
+													<input type='number' class='form-control' ng-model='receiptsmasteredit.igst' readonly />
+												</td>
+												<td>
+													<input type='number' class='form-control' ng-value="receiptsmasteredit.totalamount=receiptsmasteredit.recievedamount-0+ +(receiptsmasteredit.recievedamount*0.18)" ng-model='receiptsmasteredit.totalamount' readonly />
+												</td>
+												
+												
+											</tr>
+											<tr>
+												<td colspan="3" ng-if="receiptsmasteredit.igst==null || receiptsmasteredit.cgst>0 || receiptsmasteredit.sgst>0">
+													Total Amount Received
+												</td>
+												<td colspan="2" ng-if="receiptsmasteredit.cgst==null || receiptsmasteredit.sgst==null || receiptsmasteredit.igst>0">
+													Total Amount Received
+												</td>
+												<td>
+													<input type='number' class='form-control' ng-model='receiptsmasteredit.totalamountrecieved' readonly />
+												</td>
+											</tr>
+											<tr>
+												<td colspan="3" ng-if="receiptsmasteredit.igst==null || receiptsmasteredit.cgst>0 || receiptsmasteredit.sgst>0">
+													Balance
+												</td>
+												<td colspan="2" ng-if="receiptsmasteredit.cgst==null || receiptsmasteredit.sgst==null || receiptsmasteredit.igst>0">
+													Balance
+												</td>
+												<td>
+													<input type='number' class='form-control' ng-value="receiptsmasteredit.balance=(receiptsmasteredit.amount)-0+ -(receiptsmasteredit.totalamountrecieved)-0+ -receiptsmasteredit.totalamount" ng-model='receiptsmasteredit.balance' readonly />
+												</td>
+											</tr>
+										</tbody>
+									</table>
+									</div>
+									
+								<div class="form-group" >
+									<label class="col-sm-3">Remark </label>
+									<div class="col-sm-6">
+										<textarea class="form-control" ng-model="receiptsmasteredit.remark"></textarea>
+									</div>
+								</div>
+                                <!-- <div class='form-group'>
+                                    <label class='col-sm-3 control-label'>Received Amount</label>
+                                    <div class='col-sm-8'>
+                                        <input class='form-control' type='text' ng-model='receiptsmasteredit.recievedamount' />
+                                    </div>
+                                </div>
+                                <div class='form-group'>
+                                    <label class='col-sm-3 control-label'>CGST</label>
+                                    <div class='col-sm-8'>
+                                        <input class='form-control' type='text' ng-model='receiptsmasteredit.cgst' />
+                                    </div>
+                                </div>
+                                <div class='form-group'>
+                                    <label class='col-sm-3 control-label'>SGST</label>
+                                    <div class='col-sm-8'>
+                                        <input class='form-control' type='text' ng-model='receiptsmasteredit.sgst' />
+                                    </div>
+                                </div>
+                                <div class='form-group'>
+                                    <label class='col-sm-3 control-label'>Total Amount Received</label>
+                                    <div class='col-sm-8'>
+                                        <input class='form-control' type='text' ng-model='receiptsmasteredit.totalamountrecieved' />
+                                    </div>
+                                </div>
+                                <div class='form-group'>
+                                    <label class='col-sm-3 control-label'>Balance</label>
+                                    <div class='col-sm-8'>
+                                        <input class='form-control' type='text' ng-model='receiptsmasteredit.balance' />
+                                    </div>
+                                </div> -->
+                                
+                        </div>
+                        </form>
+                        <div class="modal-footer">
+                            <div class="form-actions">
+                                <div class="row">
+                                    <div class="col-lg-offset-6 col-lg-4">
+                                        <input type='button' class='btn btn-primary' value='submit' ng-click='editreceiptsmaster()'>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class='row'>
+				<div class='col-md-3 '>
+					<button class="btn"><i id="btnExport2" class="fa fa-file-excel-o" style="color:green;font-size:20px">Excel</i></button>
+				</div>
+				
+                <div class='col-md-offset-3 col-md-3 '>
+                    <div class='icon-addon addon-lg'>
+                        <input type='search' ng-model='search' class='form-control input-sm w-lg inline m-r' placeholder='Search'>
+                        <label for='search' class='glyphicon glyphicon-search' rel='tooltip' title='search'></label>
+                    </div>
+                </div>
+                <div class=" col-md-3 ">
+                    <button style='border:none;background:white;color:#512e90;' ng-disabled='currentPage == 0' class='glyphicon glyphicon-chevron-left' ng-click='currentPage=currentPage-1'></button><b>  {{currentPage+1}} / {{numberOfPages()}} </b>
+                    <input type='number' min='1' max='{{maxpage}}' ng-change='checkcurrpage(myValue)' style='width:35%' ng-model='myValue'>
+                    <button style='border:none;background:white;color:#512e90' class='glyphicon glyphicon-chevron-right' ng-disabled='currentPage >= listreceiptsmasterdata.length/pageSize - 1' ng-click='currentPage=currentPage+1'></button>
+                </div>
+            </div>
+            <div class='row'>
+                <div class='table-responsive'><br>
+                    <table style='font-size:14px;' class='table table-striped table-bordered'>
+                        <thead style="background-color:#512e90">
+                            <th style='text-align:center'>
+                                <a href='#' style='text-decoration:none;color:white' ng-click="sortType = 'receiptid'; sortReverse = !sortReverse"> <b>Receipt Master</b> <span ng-show="sortType= 'receiptid' && !sortReverse" style='font-size:10px;' class='glyphicon glyphicon-triangle-bottom'></span> <span ng-show="sortType = 'receiptid' && sortReverse" style='font-size:10px' class='glyphicon glyphicon-triangle-top'></span> </a>
+                            </th>
+                            <th style='text-align:center'>
+                                <a href='#' style='text-decoration:none;color:white' ng-click="sortType = 'clientid'; sortReverse = !sortReverse"> <b>Client</b> <span ng-show="sortType= 'clientid' && !sortReverse" style='font-size:10px;' class='glyphicon glyphicon-triangle-bottom'></span> <span ng-show="sortType = 'clientid' && sortReverse" style='font-size:10px' class='glyphicon glyphicon-triangle-top'></span> </a>
+                            </th>
+                            <th style='text-align:center'>
+                                <a href='#' style='text-decoration:none;color:white' ng-click="sortType = 'planid'; sortReverse = !sortReverse"> <b>Plan</b> <span ng-show="sortType= 'planid' && !sortReverse" style='font-size:10px;' class='glyphicon glyphicon-triangle-bottom'></span> <span ng-show="sortType = 'planid' && sortReverse" style='font-size:10px' class='glyphicon glyphicon-triangle-top'></span> </a>
+                            </th>
+                            <th style='text-align:center'>
+                                <a href='#' style='text-decoration:none;color:white' ng-click="sortType = 'totalamount'; sortReverse = !sortReverse"> <b>Total Amount</b> <span ng-show="sortType= 'totalamount' && !sortReverse" style='font-size:10px;' class='glyphicon glyphicon-triangle-bottom'></span> <span ng-show="sortType = 'totalamount' && sortReverse" style='font-size:10px' class='glyphicon glyphicon-triangle-top'></span> </a>
+                            </th>
+                            <th style='text-align:center'>
+                                <a href='#' style='text-decoration:none;color:white' ng-click="sortType = 'recievedamount'; sortReverse = !sortReverse"> <b>Received Amount</b> <span ng-show="sortType= 'recievedamount' && !sortReverse" style='font-size:10px;' class='glyphicon glyphicon-triangle-bottom'></span> <span ng-show="sortType = 'recievedamount' && sortReverse" style='font-size:10px' class='glyphicon glyphicon-triangle-top'></span> </a>
+                            </th>
+                            <th style='text-align:center'>
+                                <a href='#' style='text-decoration:none;color:white' ng-click="sortType = 'totalamountrecieved'; sortReverse = !sortReverse"> <b>Total Amount Received</b> <span ng-show="sortType= 'totalamountrecieved' && !sortReverse" style='font-size:10px;' class='glyphicon glyphicon-triangle-bottom'></span> <span ng-show="sortType = 'totalamountrecieved' && sortReverse" style='font-size:10px' class='glyphicon glyphicon-triangle-top'></span> </a>
+                            </th>
+                            <th style='text-align:center'>
+                                <a href='#' style='text-decoration:none;color:white' ng-click="sortType = 'balance'; sortReverse = !sortReverse"> <b>Balance</b> <span ng-show="sortType= 'balance' && !sortReverse" style='font-size:10px;' class='glyphicon glyphicon-triangle-bottom'></span> <span ng-show="sortType = 'balance' && sortReverse" style='font-size:10px' class='glyphicon glyphicon-triangle-top'></span> </a>
+                            </th>
+                            <th style='text-align:center'>
+                                <a href='#' style='text-decoration:none;color:white' ng-click="sortType = 'mode'; sortReverse = !sortReverse"> <b>Remark</b> <span ng-show="sortType= 'mode' && !sortReverse" style='font-size:10px;' class='glyphicon glyphicon-triangle-bottom'></span> <span ng-show="sortType = 'mode' && sortReverse" style='font-size:10px' class='glyphicon glyphicon-triangle-top'></span> </a>
+                            </th>
+                            
+                            <th style='text-align:center;'><b style='color:white'>Action</b></th>
+                        </thead>
+                        <tbody ng-init='listreceiptsmaster()'>
+                            <tr ng-repeat='receiptsmaster in listreceiptsmasterdata |filter:search | startFrom:currentPage*pageSize | limitTo:pageSize  | orderBy:sortType:sortReverse'>
+                                <td style='text-align:center;'>{{receiptsmaster.receiptid }}</td>
+                                <td style='text-align:center;'>{{receiptsmaster.client }}</td>
+                                <td style='text-align:center;'>{{receiptsmaster.plan }}</td>
+                                <td style='text-align:center;'>{{receiptsmaster.totalamount }}</td>
+                                <td style='text-align:center;'>{{receiptsmaster.recievedamount }}</td>
+                                <td style='text-align:center;'>{{receiptsmaster.totalamountrecieved }}</td>
+                                <td style='text-align:center;'>{{receiptsmaster.balance }}</td>
+                                <td style='text-align:center;'>{{receiptsmaster.remark }}</td>
+                                
+                                <td style='text-align:center;'><a href='' ng-click='getreceiptsmaster(receiptsmaster.receiptid)' data-toggle='modal' data-target='#myModalEdit'>Edit</a> | <a href='#' ng-click='deletereceiptsmaster(receiptsmaster.receiptid)'>Delete</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+					<div id="table_wrapper2" style="display:none" >
+						<table style='font-size:14px;' class='table table-striped table-bordered' border="1" cellspacing="0" bordercolor="#222">
+							<thead style="background-color:#512e90">
+								<th style='text-align:center'>
+									Receipt Id
+								</th>
+								<th style='text-align:center'>
+									Client Id
+								</th>
+								<th style='text-align:center'>
+									Plan Id 
+								</th>
+								<th style='text-align:center'>
+									Total Amount
+								</th>
+								<th style='text-align:center'>
+									Recieved Amount
+								</th>
+								<th style='text-align:center'>
+									CGST
+								</th>
+								<th style='text-align:center'>
+									SGST
+								</th>
+								<th style='text-align:center'>
+									IGST
+								</th>
+								<th style='text-align:center'>
+									Total Amount Recieved
+								</th>
+								<th style='text-align:center'>
+									Balance
+								</th>
+								<th style='text-align:center'>
+									Mode
+								</th>
+							</thead>
+							<tbody>
+								<tr ng-repeat='receiptsmaster in listreceiptsmasterdata  |filter:search '>
+									 <td style='text-align:center;'>{{receiptsmaster.receiptid }}</td>
+									<td style='text-align:center;'>{{receiptsmaster.client }}</td>
+									<td style='text-align:center;'>{{receiptsmaster.plan }}</td>
+									<td style='text-align:center;'>{{receiptsmaster.totalamount }}</td>
+									<td style='text-align:center;'>{{receiptsmaster.recievedamount }}</td>
+									<td style='text-align:center;'>{{receiptsmaster.cgst }}</td>
+									<td style='text-align:center;'>{{receiptsmaster.sgst }}</td>
+									<td style='text-align:center;'>{{receiptsmaster.igst }}</td>
+									<td style='text-align:center;'>{{receiptsmaster.totalamountrecieved }}</td>
+									<td style='text-align:center;'>{{receiptsmaster.balance }}</td>
+									<td style='text-align:center;'>{{receiptsmaster.mode }}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+                </div>
+                <div class='col-md-12' ng-show='filteredItems == 0'>
+                    <div class='col-md-12'>
+                        <h4>No Data found</h4> </div>
+                </div>
+            </div>
+            <div id='footer' style="background-color:white;font-size:20px">&#169;2016 DEEPTRACK DATA SYSTEMS PVT LTD. All Rights Reserved</div>
+        </div>
+    </div>
+</body>
+
+<script>
+	$(document).ready(function() {
+	$("#btnExport2").click(function(e) {
+	e.preventDefault();
+
+	//getting data from our table
+	var data_type = 'data:application/vnd.ms-excel';
+	var table_div = document.getElementById('table_wrapper2');
+
+	var table_html = table_div.outerHTML.replace(/ /g, '%20');
+
+	var a = document.createElement('a');
+	a.href = data_type + ', ' + table_html;
+	a.download = 'exported_table_' + Math.floor((Math.random() * 9999999) + 1000000) + '.xls';
+	a.click();
+  });
+  });
+</script>
+
+</html>

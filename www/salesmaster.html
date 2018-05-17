@@ -1,0 +1,792 @@
+<html>
+
+<head>
+    <link rel='stylesheet' href='css/main.css' type='text/css'>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' href='css/bootstrap.min.css'>
+    <link href='js/jquery.bootgrid.css' rel='stylesheet'>
+    <script src='js/jquery-3.1.1.js'></script>
+    <script src='js/jquery.slimscroll.js'></script>
+    <script src='js/angular.js'></script>
+    <script src='js/angular-route.min.js'></script>
+    <script src='js/ui-bootstrap-tpls-1.1.1.min.js'></script>
+    <script src='js/bootstrap-3.3.7.js'>
+    </script>
+    <script src='cjs/salesmaster.js'></script>
+    <style type='text/css'>
+        #footer {
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+            left: 0;
+            text-align: center;
+            height: 20px;
+            background: #E6E4E4;
+        }
+        
+        .input-group .icon-addon .form-control {
+            border-radius: 0;
+        }
+        
+        .icon-addon {
+            position: relative;
+            color: #555;
+            display: block;
+        }
+        
+        .icon-addon:after,
+        .icon-addon:before {
+            display: table;
+            content: ' ';
+        }
+        
+        .icon-addon:after {
+            clear: both;
+        }
+        
+        .icon-addon.addon-md .glyphicon,
+        .icon-addon .glyphicon,
+        .icon-addon.addon-md .fa,
+        .icon-addon .fa {
+            position: absolute;
+            z-index: 2;
+            left: 10px;
+            font-size: 14px;
+            margin-left: -2.5px;
+            text-align: center;
+            padding: 10px 0;
+            top: 1px
+        }
+        
+        .icon-addon.addon-lg .form-control {
+            line-height: 1.33;
+            height: 30px;
+            font-size: 13px;
+            padding: 10px 16px 10px 40px;
+        }
+        
+        .icon-addon.addon-lg .fa,
+        .icon-addon.addon-lg .glyphicon {
+            font-size: 13px;
+            margin-left: 0;
+            left: 11px;
+            top: -1px;
+            color: #512e90;
+        }
+    </style>
+</head>
+
+<body ng-app='salesmasterApp' ng-controller='salesmasterController'>
+    <div class="wrapper">
+        <div ng-include="'mainmenu.html'"></div>
+        <div class="content-wrapper" ng-init="listplan();getcountry();">
+            <div class="page-title">
+                <div>
+                    <h1><i class='fa fa-dashboard'></i> Sales Master</h1></div>
+                <div><a href='' data-toggle='modal' data-target='#myModalAdd' class='btn btn-primary btn-flat'><i class='fa fa-lg fa-plus'></i> <b>ADD</b></a></div>
+            </div>
+            <div class="modal modal-overlay" id="myModalAdd" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header" style="background-color:#512e90;color:white">
+                            <button type="button" class="pull-right" data-dismiss="modal" style="background-color:#512e90;color:white">X</button>
+                            <h4 class='modal-title' style='text-align:center'>ADD Sales Master </h4> </div>
+                        <div class="modal-body">
+                            <form class="form-horizontal" role="form" name="add_member">
+								<div class=' col-md-12 form-group'>
+									<div class='col-sm-offset-3 col-sm-8'>
+										<label >
+											<input type="radio" name="Type" ng-model="salesmasteradd.Type" value="customer"  > NEW CUSTOMER 
+										</label>
+										<label >
+											<input type="radio"  name="Type"  ng-model="salesmasteradd.Type" value="xcustomer"  >EXISTING CUSTOMER
+										</label> 
+									</div>
+								</div>
+								<div ng-show="salesmasteradd.Type=='xcustomer'">
+									<div class='form-group'>
+										<div class='col-sm-6' ng-init="listsalesidmaster();">
+											<label >Client</label>
+												
+												<select type="text" class="form-control"  ng-model="customeroldadd.clientid" ng-options="obj.userid as obj.name for obj in clientdata | filter:$viewValue">
+												<option value="">Select</option>
+												</select>
+										</div>
+									</div>
+										
+								</div>
+								<div ng-show="salesmasteradd.Type=='customer'">
+										<div class='form-group'>
+											<div class='col-sm-8'>
+												<label>Name</label>
+												<input type='text' class='form-control' ng-model='customeradd.name' />
+											</div>
+											<div class='col-sm-4'>
+												<label>PAN no.</label>
+												<input type='text' class='form-control' ng-model='customeradd.panno' />
+											</div>
+										</div>
+										<div class='form-group'> 
+											<div class='col-sm-4'>
+												<label>TAN no.</label>
+												<input type='text' class='form-control' ng-model='customeradd.tanno' />
+											</div>
+											<div class='col-sm-4'>
+												<label>Fax No.</label>
+												<input type='text' class='form-control' ng-model='customeradd.faxno' />
+											</div>
+											<div class='col-sm-4'>
+												<label>GST no.</label>
+												<input type='text' class='form-control' ng-model='customeradd.gstno' />
+											</div>
+										</div>
+										<div class='form-group'> 
+											<div class='col-sm-6'>
+												<label>Email 1</label>
+												<input type='emailid' class='form-control' ng-model='customeradd.emailid1' />
+											</div>
+											<div class='col-sm-6'>
+												<label>Mobile No 1</label>
+												<input type='number' class='form-control' ng-model='customeradd.mobileno1' maxlength="10"/>
+											</div>
+										</div>
+								</div>
+								<div class='form-group'>
+									<div class='col-sm-6'>
+											<label >Plan</label>
+											<select type="text" class="form-control" ng-model="salesmasteradd.planid" ng-options="obj.planid
+											as obj.planname for obj in plandata | filter:$viewValue" ng-change="onselectplan(salesmasteradd.planid);gettotalamount(salesmasteradd.quotedamount)">
+											<option value="">Select</option>
+											</select>
+									</div>
+										<div class='col-sm-6'>
+											<label>Shipping Address</label>
+											<textarea type='text' class='form-control' ng-model='salesmasteradd.shippingaddress'></textarea>
+										</div>
+								</div>
+									
+									<div class='form-group'>
+										<div class='col-sm-6'>
+											<label>Leads Quantity</label>
+											<input type='number' class='form-control' ng-model='salesmasteradd.leadsquantity' readonly />
+										</div>
+										<div class='col-sm-6'>
+											<label>Free Flag</label><br>
+											<label><input type="radio" ng-model="salesmasteradd.freeflag" value="yes">YES</label>
+											<label><input type="radio" ng-model="salesmasteradd.freeflag" value="no">NO</label>
+										</div>
+									</div>
+									<div class='form-group' ng-show="salesmasteradd.freeflag=='yes'">
+										<div class='col-sm-6'>
+											<label >Free Quantity</label>
+											<input type='number' class='form-control' ng-model='salesmasteradd.freequantity' ng-change="totalcount(salesmasteradd.freequantity)" />
+										</div>
+										<div class='col-sm-6'>
+										<label >Total Quantity</label>
+											<input type='number' class='form-control' ng-model='salesmasteradd.totalquantity' readonly />
+										</div>
+									</div>
+									<div class='form-group'>
+										<div class='col-sm-3'>
+											<label>Quoted Amount</label>
+											<input type='text' class='form-control' ng-model='salesmasteradd.quotedamount' readonly />
+										</div>
+										<div class='col-sm-3'>
+											<label >Discount(%)</label>
+											<input type='text' class='form-control' ng-model='salesmasteradd.discount' ng-change="onselectplan(salesmasteradd.planid);gettotalamount(salesmasteradd.quotedamount)" />
+										</div>
+										<div class='col-sm-3'>
+											<label>Selling Amount</label>
+											<input type='text' class='form-control' ng-model='salesmasteradd.sellingamount' readonly />
+										</div>
+										<div class='col-sm-3'>
+											<label>Total Amount</label>
+											<input type='text' class='form-control' ng-model='salesmasteradd.totalamount' readonly />
+										</div>
+									</div>
+									<div class='form-group'>
+										<div class='col-sm-6'>
+											<label>Country</label>
+											<input type='text' class='form-control' ng-init="salesmasteradd.country='india'" ng-model='salesmasteradd.country' readonly />
+										</div>
+										<div class='col-sm-4'>
+											<label>City</label>
+											<select type="text" class="form-control" ng-model="salesmasteradd.city" ng-options="obj as obj.city for obj in getinformation | filter:$viewValue" ng-change="GetSelectedDetails(salesmasteradd.city);addcapablity(salesmasteradd.city)">
+											<option value="">Select</option>
+											</select>
+										</div>
+									</div>
+									<div class='form-group'>
+										<div class='col-sm-6'>
+											<label>State Code</label>
+											<input type='text' class='form-control' ng-model='salesmasteradd.statecode' readonly />
+										</div>
+										<div class='col-sm-6'>
+											<label>State</label>
+											<input type='text' class='form-control' ng-model='salesmasteradd.state' readonly />
+										</div>
+									</div>
+									<div class='form-group' ng-if="salesmasteradd.statecode==27">
+										<div class='col-sm-6'>
+											<label>CGST(%)</label>
+											<input type='text' class='form-control' ng-model='salesmasteradd.cgst' readonly />
+										</div>
+										<div class='col-sm-6'>
+											<label>SGST(%)</label>
+											<input type='text' class='form-control' ng-model='salesmasteradd.sgst' readonly />
+										</div>
+									</div>
+									<div class='form-group' ng-if="salesmasteradd.statecode!=27" >
+										<div class='col-sm-6'>
+											<label>IGST(%)</label>									
+											<input type="text" class="form-control" ng-model="salesmasteradd.igst" readonly />
+										</div>
+									</div>
+									<div class='form-group'  >
+										<div class='col-sm-6'>
+											<label >Delivered Quantity</label>
+											<input type='text' class='form-control' ng-model='salesmasteradd.deliveredquantity' disabled />
+										</div>
+										<div class='col-sm-6'>
+											<label>Balance</label> 
+											<input type='text' class='form-control' ng-model='salesmasteradd.balance' disabled />
+										</div>
+									</div>
+                                
+								
+										
+							</form>
+							<div class="row ">
+							<div class="table-responsive">
+								<table class="table">
+									<tr>
+										<td ng-repeat="x in capability"><button class="btn btn-default"  ng-click="deletecapablity(x)" readonly>{{x.city}} <span class="glyphicon glyphicon-remove"  ></span> </button></td>
+									</tr>
+								</table>
+							</div>
+						</div>	
+                            
+                        </div>
+                        <div class='modal-footer'>
+                            <div class='form-actions'>
+                                <div class="row">
+                                    <div class="col-lg-offset-6 col-lg-4">
+                                        <input type='button' class='btn btn-primary' value='submit' ng-click='addsalesmaster()'>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+			
+            <!-- <div class="modal modal-overlay" id="myModalEdit" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header" style="background-color:#512e90;color:white">
+                            <button type="button" class="pull-right" data-dismiss="modal" style="background-color:#512e90;color:white">X</button>
+                            <h4 class='modal-title' style='text-align:center'>EDIT Sales Master </h4> </div>
+                        <div class='modal-body'>
+                            <form class='form-horizontal' role='form' name='edit_member' ng-repeat='salesmasteredit in getsalesmasterdata'>
+                                <div class='form-group'>
+									<div class='col-sm-6'>
+										<label >Client</label>									
+										<select type="text" class="form-control" ng-model="salesmasteredit.clientid" ng-options="obj.userid as obj.name for obj in clientdata | filter:$viewValue">
+										<option value="">Select</option>
+										</select>
+									</div>
+									<div class='col-sm-6'>
+										<label >Plan</label>
+										<select type="text" class="form-control" ng-model="salesmasteredit.planid" ng-options="obj.planid
+											as obj.planname for obj in plandata | filter:$viewValue" ng-change="onselectplan(salesmasteredit.planid);">
+											<option value="">Select</option>
+											</select>
+										
+                                    </div>
+								</div>
+								<div class='form-group'>
+									<div class='col-sm-12'>
+										<label >Shipping Address</label>
+                                        <textarea class='form-control' type='text' ng-model='salesmasteredit.shippingaddress' ></textarea>
+                                    </div>
+                                </div>
+                                <div class='form-group'>
+                                    <div class='col-sm-6'>
+										<label >Leads Quantity</label>
+                                        <input class='form-control' type='text' ng-model='salesmasteredit.leadsquantity' />
+                                    </div>
+									<div class='col-sm-6'>
+										<label >Free Flag</label>
+                                        <input class='form-control' type='text' ng-model='salesmasteredit.freeflag' />
+                                    </div>
+                                </div>
+                                
+                                <div class='form-group'>
+                                    <div class='col-sm-6'>
+										<label >free Quantity</label>
+                                        <input class='form-control' type='text' ng-model='salesmasteredit.freequantity' />
+                                    </div>
+									<div class='col-sm-6'>
+										<label >Total Quantity</label>
+                                        <input class='form-control' type='text' ng-model='salesmasteredit.totalquantity' />
+                                    </div>
+                                </div>
+                                <div class='form-group'>
+                                    <div class='col-sm-6'>
+										<label >Quoted Amount</label>
+                                        <input class='form-control' type='text' ng-model='salesmasteredit.quotedamount' />
+                                    </div>
+									
+                                    <div class='col-sm-6'>
+										<label >Discount(%)</label>
+                                        <input class='form-control' type='text' ng-model='salesmasteredit.discount' />
+                                    </div>
+								</div>
+								<div class='form-group'>
+                                    <div class='col-sm-6'>
+										<label >Total Amount</label>
+                                        <input class='form-control' type='text' ng-model='salesmasteredit.totalamount' />
+                                    </div>
+									 <div class='col-sm-6'>
+										<label >Selling Amount</label>
+                                        <input class='form-control' type='text' ng-model='salesmasteredit.sellingamount' />
+                                    </div>
+									
+                                </div>
+								<div class='form-group'>
+                                    <div class='col-sm-6'>
+										<label >Country</label>
+                                        <input class='form-control' type='text' ng-model='salesmasteredit.country' />
+                                    </div>
+									
+                                    <div class='col-sm-6'>
+										<label >State</label>
+                                        <input class='form-control' type='text' ng-model='salesmasteredit.state' />
+                                    </div>
+                                </div>
+                                
+                                <div class='form-group'>
+                                    <div class='col-sm-6'>
+										<label >State Code</label>
+                                        <input class='form-control' type='text' ng-model='salesmasteredit.statecode' />
+                                    </div>
+									<div class='col-sm-6'>
+										<label >City</label>
+										<select type="text" class="form-control" ng-model="salesmasteredit.city" ng-options="obj as obj.city for obj in getinformation | filter:$viewValue" ng-change="addcapablityforedit(salesmasteredit.city)">
+											<option value="">Select</option>
+											</select>
+                                       
+                                    </div>
+                                </div>
+								<div class='form-group' ng-if="salesmasteredit.statecode==27">
+										<div class='col-sm-6'>
+											<label>CGST(%)</label>
+											<input type='text' class='form-control' ng-model='salesmasteredit.cgst' readonly />
+										</div>
+										<div class='col-sm-6'>
+											<label>SGST(%)</label>
+											<input type='text' class='form-control' ng-model='salesmasteredit.sgst' readonly />
+										</div>
+								</div>
+								<div class='form-group' ng-show="salesmasteredit.statecode!=27" >
+										<div class='col-sm-6'>
+											<label>IGST(%)</label>									
+											<input type="text" class="form-control" ng-model="salesmasteredit.igst" readonly />
+										</div>
+								</div>
+                                <div class='form-group'>
+                                    <div class='col-sm-6'>
+										<label >Delivered Quantity</label>
+                                        <input class='form-control' type='text' ng-model='salesmasteredit.deliveredquantity' />
+                                    </div>
+									<div class='col-sm-6'>
+										<label >Balance</label>
+                                        <input class='form-control' type='text' ng-model='salesmasteredit.balance' />
+                                    </div>
+                                </div>
+								<div class='form-group'>
+									<div class="table-responsive">
+										<table class="table">
+											<tr>
+												<td ng-repeat="x in getsalesdetailsmasterdata"><button class="btn btn-default" ng-click="deletecapablityforedit(x)">{{x.city}} <span class="glyphicon glyphicon-remove"  ></span> </button></td>
+											</tr>
+										</table>
+									</div>
+								</div>
+                                
+                        </div>
+                        </form>
+                        <div class="modal-footer">
+                            <div class="form-actions">
+                                <div class="row">
+                                    <div class="col-lg-offset-6 col-lg-4">
+                                        <input type='button' class='btn btn-primary' value='submit' ng-click='editsalesmaster()'>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+			
+			<div class="modal modal-overlay" id="myModalEdit" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header" style="background-color:#512e90;color:white">
+                            <button type="button" class="pull-right" data-dismiss="modal" style="background-color:#512e90;color:white">X</button>
+                            <h4 class='modal-title' style='text-align:center'>EDIT Sales Master </h4> </div>
+                        <div class='modal-body'>
+                            <form class='form-horizontal' role='form' name='edit_member' ng-repeat='salesmasteredit in getsalesmasterdata'>
+                                <div class='form-group'>
+									<div class='col-sm-6'>
+										<label >Client</label>									
+										<select type="text" class="form-control" ng-model="salesmasteredit.clientid" ng-options="obj.userid as obj.name for obj in clientdata | filter:$viewValue">
+										<option value="">Select</option>
+										</select>
+									</div>
+									<div class='col-sm-6'>
+										<label >Plan</label>
+										<select type="text" class="form-control" ng-model="salesmasteredit.planid" ng-options="obj.planid
+											as obj.planname for obj in plandata | filter:$viewValue" ng-change="onselectplanedit(salesmasteredit.planid);">
+											<option value="">Select</option>
+										</select>
+										
+                                    </div>
+								</div>
+								<div class='form-group'>
+									<div class='col-sm-12'>
+										<label >Shipping Address</label>
+                                        <textarea class='form-control' type='text' ng-model='salesmasteredit.shippingaddress' ></textarea>
+                                    </div>
+                                </div>
+                                <div class='form-group'>
+                                    <div class='col-sm-6'>
+										<label >Leads Quantity</label>
+                                        <input class='form-control' type='number' ng-model='salesmasteredit.leadsquantity' readonly />
+                                    </div>
+									<div class='col-sm-6'>
+										<label>Free Flag</label><br>
+										<label><input type="radio" ng-model="salesmasteredit.freeflag" value="yes">YES</label>
+										<label><input type="radio" ng-model="salesmasteredit.freeflag" value="no">NO</label>
+									</div>
+                                </div>
+								<div class='form-group' ng-show="salesmasteredit.freeflag=='yes'">
+									<div class='col-sm-6'>
+										<label >Free Quantity</label>
+										<input type='number' class='form-control' ng-model='salesmasteredit.freequantity' ng-change="totalcountedit(salesmasteredit.freequantity)" />
+									</div>
+									<div class='col-sm-6'>
+									<label >Total Quantity</label>
+										<input type='number' class='form-control' ng-model='salesmasteredit.totalquantity' readonly />
+									</div>
+								</div>                                
+                                <!-- <div class='form-group'>
+                                    <div class='col-sm-6'>
+										<label >free Quantity</label>
+                                        <input class='form-control' type='number' ng-model='salesmasteredit.freequantity' />
+                                    </div>
+									<div class='col-sm-6'>
+										<label >Total Quantity</label>
+                                        <input class='form-control' type='number' ng-model='salesmasteredit.totalquantity' />
+                                    </div>
+                                </div> -->
+                                <div class='form-group'>
+                                    <div class='col-sm-6'>
+										<label >Quoted Amount</label>
+                                        <input class='form-control' type='number' ng-model='salesmasteredit.quotedamount' readonly />
+                                    </div>
+									
+                                    <div class='col-sm-6'>
+										<label>Discount(%)</label>
+                                        <input type='number' class='form-control' ng-model='salesmasteredit.discount' ng-change="onselectplan(salesmasteredit.planid);gettotalamountedit(salesmasteredit.quotedamount)" />
+                                    </div>
+								</div>
+								<div class='form-group'>
+                                    <div class='col-sm-6'>
+										<label >Total Amount</label>
+                                        <input class='form-control' type='text' ng-model='salesmasteredit.totalamount' readonly />
+                                    </div>
+									<div class='col-sm-6'>
+										<label >Selling Amount</label>
+                                        <input class='form-control' type='text' ng-model='salesmasteredit.sellingamount' readonly />
+                                    </div>
+									
+                                </div>
+								<div class='form-group'>
+                                    <div class='col-sm-6'>
+										<label >Country</label>
+                                        <input class='form-control' type='text' ng-model='salesmasteredit.country' readonly />
+                                    </div>
+									
+                                    <div class='col-sm-6'>
+										<label >State</label>
+                                        <input class='form-control' type='text' ng-model='salesmasteredit.state' readonly />
+                                    </div>
+                                </div>
+                                
+                                <div class='form-group'>
+                                    <div class='col-sm-6'>
+										<label >State Code</label>
+                                        <input class='form-control' type='text' ng-model='salesmasteredit.statecode' readonly />
+                                    </div>
+									<div class='col-sm-6'>
+										<label >City</label>
+										<select type="text" class="form-control" ng-model="salesmasteredit.city" ng-options="obj as obj.city for obj in getinformation | filter:$viewValue" ng-change="addcapablityforedit(salesmasteredit.city)">
+											<option value="">Select</option>
+										</select>
+                                    </div>
+                                </div>
+								
+								<div class='form-group' ng-if="salesmasteredit.statecode==27">
+									<div class='col-sm-6'>
+										<label>CGST(%)</label>
+										<input type='text' class='form-control' ng-model='salesmasteredit.cgst' readonly />
+									</div>
+									<div class='col-sm-6'>
+										<label>SGST(%)</label>
+										<input type='text' class='form-control' ng-model='salesmasteredit.sgst' readonly />
+									</div>
+								</div>
+								
+								<div class='form-group' ng-if="salesmasteredit.statecode!=27" >
+										<div class='col-sm-6'>
+											<label>IGST(%)</label>									
+											<input type="text" class="form-control" ng-model="salesmasteredit.igst" readonly />
+										</div>
+								</div>
+								
+                                <div class='form-group'>
+                                    <div class='col-sm-6'>
+										<label >Delivered Quantity</label>
+                                        <input class='form-control' type='text' ng-model='salesmasteredit.deliveredquantity' readonly />
+                                    </div>
+									<div class='col-sm-6'>
+										<label >Balance</label>
+                                        <input class='form-control' type='text' ng-model='salesmasteredit.balance' readonly />
+                                    </div>
+                                </div>
+								<div class='form-group'>
+									<div class="table-responsive">
+										<table class="table">
+											<tr>
+												<td ng-repeat="x in getsalesdetailsmasterdata"><button class="btn btn-default" ng-click="deletecapablityforedit(x)">{{x.city}} <span class="glyphicon glyphicon-remove"  ></span> </button></td>
+											</tr>
+										</table>
+									</div>
+								</div>
+                                
+                        </div>
+                        </form>
+                        <div class="modal-footer">
+                            <div class="form-actions">
+                                <div class="row">
+                                    <div class="col-lg-offset-6 col-lg-4">
+                                        <input type='button' class='btn btn-primary' value='submit' ng-click='editsalesmaster()'>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+			
+            <div class='row'>
+				<div class='col-md-3 '>
+					<button class="btn"><i id="btnExport2" class="fa fa-file-excel-o" style="color:green;font-size:20px">Excel</i></button>
+				</div>
+				
+                <div class='col-md-offset-3 col-md-3 '>
+                    <div class='icon-addon addon-lg'>
+                        <input type='search' ng-model='search' class='form-control input-sm w-lg inline m-r' placeholder='Search'>
+                        <label for='search' class='glyphicon glyphicon-search' rel='tooltip' title='search'></label>
+                    </div>
+                </div>
+                <div class=" col-md-3 ">
+                    <button style='border:none;background:white;color:#512e90;' ng-disabled='currentPage == 0' class='glyphicon glyphicon-chevron-left' ng-click='currentPage=currentPage-1'></button><b>  {{currentPage+1}} / {{numberOfPages()}} </b>
+                    <input type='number' min='1' max='{{maxpage}}' ng-change='checkcurrpage(myValue)' style='width:35%' ng-model='myValue'>
+                    <button style='border:none;background:white;color:#512e90' class='glyphicon glyphicon-chevron-right' ng-disabled='currentPage >= listsalesmasterdata.length/pageSize - 1' ng-click='currentPage=currentPage+1'></button>
+                </div>
+            </div>
+            <div class='row'>
+                <div class='table-responsive'><br>
+                    <table style='font-size:14px;' class='table table-striped table-bordered'>
+                        <thead style="background-color:#512e90">
+                            <th style='text-align:center'>
+                                <a href='#' style='text-decoration:none;color:white' ng-click="sortType = 'salesid'; sortReverse = !sortReverse"> <b>Sales Id</b> <span ng-show="sortType= 'salesid' && !sortReverse" style='font-size:10px;' class='glyphicon glyphicon-triangle-bottom'></span> <span ng-show="sortType = 'salesid' && sortReverse" style='font-size:10px' class='glyphicon glyphicon-triangle-top'></span> </a>
+                            </th>
+                            <th style='text-align:center'>
+                                <a href='#' style='text-decoration:none;color:white' ng-click="sortType = 'clientid'; sortReverse = !sortReverse"> <b>Client </b> <span ng-show="sortType= 'clientid' && !sortReverse" style='font-size:10px;' class='glyphicon glyphicon-triangle-bottom'></span> <span ng-show="sortType = 'clientid' && sortReverse" style='font-size:10px' class='glyphicon glyphicon-triangle-top'></span> </a>
+                            </th>
+                            <th style='text-align:center'>
+                                <a href='#' style='text-decoration:none;color:white' ng-click="sortType = 'planid'; sortReverse = !sortReverse"> <b>Plan </b> <span ng-show="sortType= 'planid' && !sortReverse" style='font-size:10px;' class='glyphicon glyphicon-triangle-bottom'></span> <span ng-show="sortType = 'planid' && sortReverse" style='font-size:10px' class='glyphicon glyphicon-triangle-top'></span> </a>
+                            </th>
+                            <th style='text-align:center'>
+                                <a href='#' style='text-decoration:none;color:white' ng-click="sortType = 'leadsquantity'; sortReverse = !sortReverse"> <b>Leads Quantity</b> <span ng-show="sortType= 'leadsquantity' && !sortReverse" style='font-size:10px;' class='glyphicon glyphicon-triangle-bottom'></span> <span ng-show="sortType = 'leadsquantity' && sortReverse" style='font-size:10px' class='glyphicon glyphicon-triangle-top'></span> </a>
+                            </th>
+                            <th style='text-align:center'>
+                                <a href='#' style='text-decoration:none;color:white' ng-click="sortType = 'freequantity'; sortReverse = !sortReverse"> <b>Free Quantity</b> <span ng-show="sortType= 'freequantity' && !sortReverse" style='font-size:10px;' class='glyphicon glyphicon-triangle-bottom'></span> <span ng-show="sortType = 'freequantity' && sortReverse" style='font-size:10px' class='glyphicon glyphicon-triangle-top'></span> </a>
+                            </th>
+                            <th style='text-align:center'>
+                                <a href='#' style='text-decoration:none;color:white' ng-click="sortType = 'totalquantity'; sortReverse = !sortReverse"> <b>Total Quantity</b> <span ng-show="sortType= 'totalquantity' && !sortReverse" style='font-size:10px;' class='glyphicon glyphicon-triangle-bottom'></span> <span ng-show="sortType = 'totalquantity' && sortReverse" style='font-size:10px' class='glyphicon glyphicon-triangle-top'></span> </a>
+                            </th>
+                            <th style='text-align:center'>
+                                <a href='#' style='text-decoration:none;color:white' ng-click="sortType = 'quotedamount'; sortReverse = !sortReverse"> <b>Quoted Amount</b> <span ng-show="sortType= 'quotedamount' && !sortReverse" style='font-size:10px;' class='glyphicon glyphicon-triangle-bottom'></span> <span ng-show="sortType = 'quotedamount' && sortReverse" style='font-size:10px' class='glyphicon glyphicon-triangle-top'></span> </a>
+                            </th>
+                            <th style='text-align:center'>
+                                <a href='#' style='text-decoration:none;color:white' ng-click="sortType = 'sellingamount'; sortReverse = !sortReverse"> <b>Selling Amount</b> <span ng-show="sortType= 'sellingamount' && !sortReverse" style='font-size:10px;' class='glyphicon glyphicon-triangle-bottom'></span> <span ng-show="sortType = 'sellingamount' && sortReverse" style='font-size:10px' class='glyphicon glyphicon-triangle-top'></span> </a>
+                            </th>
+                            <th style='text-align:center'>
+                                <a href='#' style='text-decoration:none;color:white' ng-click="sortType = 'totalamount'; sortReverse = !sortReverse"> <b>Total Amount</b> <span ng-show="sortType= 'totalamount' && !sortReverse" style='font-size:10px;' class='glyphicon glyphicon-triangle-bottom'></span> <span ng-show="sortType = 'totalamount' && sortReverse" style='font-size:10px' class='glyphicon glyphicon-triangle-top'></span> </a>
+                            </th>
+                            <th style='text-align:center'>
+                                <a href='#' style='text-decoration:none;color:white' ng-click="sortType = 'deliveredquantity'; sortReverse = !sortReverse"> <b>Delivered Quantity</b> <span ng-show="sortType= 'deliveredquantity' && !sortReverse" style='font-size:10px;' class='glyphicon glyphicon-triangle-bottom'></span> <span ng-show="sortType = 'deliveredquantity' && sortReverse" style='font-size:10px' class='glyphicon glyphicon-triangle-top'></span> </a>
+                            </th>
+                            <th style='text-align:center'>
+                                <a href='#' style='text-decoration:none;color:white' ng-click="sortType = 'balance'; sortReverse = !sortReverse"> <b>Balance</b> <span ng-show="sortType= 'balance' && !sortReverse" style='font-size:10px;' class='glyphicon glyphicon-triangle-bottom'></span> <span ng-show="sortType = 'balance' && sortReverse" style='font-size:10px' class='glyphicon glyphicon-triangle-top'></span> </a>
+                            </th>
+                            <th style='text-align:center;'><b style='color:white'>Action</b></th>
+                        </thead>
+                        <tbody ng-init='listsalesmaster()'>
+                            <tr ng-repeat='salesmaster in listsalesmasterdata |filter:search | startFrom:currentPage*pageSize | limitTo:pageSize  | orderBy:sortType:sortReverse'>
+                                <td style='text-align:center;'>{{salesmaster.salesid }}</td>
+                                <td style='text-align:center;'>{{salesmaster.client }}</td>
+                                <td style='text-align:center;'>{{salesmaster.plan }}</td>
+                                <td style='text-align:center;'>{{salesmaster.leadsquantity }}</td>
+                                <td style='text-align:center;'>{{salesmaster.freequantity }}</td>
+                                <td style='text-align:center;'>{{salesmaster.totalquantity }}</td>
+                                <td style='text-align:center;'>{{salesmaster.quotedamount }}</td>
+                                <td style='text-align:center;'>{{salesmaster.sellingamount }}</td>
+                                <td style='text-align:center;'>{{salesmaster.totalamount }}</td>
+                                <td style='text-align:center;'>{{salesmaster.deliveredquantity }}</td>
+                                <td style='text-align:center;'>{{salesmaster.balance }}</td>
+                                <td style='text-align:center;'><a href='' ng-click='getsalesmaster(salesmaster.salesid);getsalesdetailsmaster(salesmaster.salesid);' data-toggle='modal' data-target='#myModalEdit'>Edit</a> | <a href='#' ng-click='deletesalesmaster(salesmaster.salesid)'>Delete</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+					<div id="table_wrapper2" style="display:none" >
+						<table style='font-size:14px;' class='table table-striped table-bordered' border="1" cellspacing="0" bordercolor="#222">
+							<thead style="background-color:#512e90">
+								<th style='text-align:center'>
+									Sales Id
+								</th>
+								<th style='text-align:center'>
+									Client 
+								</th>
+								<th style='text-align:center'>
+									Plan  
+								</th>
+								<th style='text-align:center'>
+									Leads Quantity
+								</th>
+								<th style='text-align:center'>
+									Free Flag
+								</th>
+								<th style='text-align:center'>
+									Free Quantity
+								</th>
+								<th style='text-align:center'>
+									Total Quantity
+								</th>
+								<th style='text-align:center'>
+									Quoted Amount
+								</th>
+								<th style='text-align:center'>
+									Discount
+								</th>
+								<th style='text-align:center'>
+									Selling Amount
+								</th>
+								<th style='text-align:center'>
+									CGST
+								</th>
+								<th style='text-align:center'>
+									SGST
+								</th>
+								<th style='text-align:center'>
+									IGST
+								</th>
+								<th style='text-align:center'>
+									Total Amount 
+								</th>
+								<th style='text-align:center'>
+									Shipping Address
+								</th>
+								<th style='text-align:center'>
+									Country
+								</th>
+								<th style='text-align:center'>
+									State
+								</th>
+								<th style='text-align:center'>
+									State Code
+								</th>
+								<th style='text-align:center'>
+									City
+								</th>
+								<th style='text-align:center'>
+									Delivered Quantity
+								</th>
+								<th style='text-align:center'>
+									Balance
+								</th>
+							</thead>
+							<tbody>
+								<tr ng-repeat='salesmaster in listsalesmasterdata  |filter:search '>
+									<td style='text-align:center;'>{{salesmaster.salesid }}</td>
+									<td style='text-align:center;'>{{salesmaster.client }}</td>
+									<td style='text-align:center;'>{{salesmaster.plan }}</td>
+									<td style='text-align:center;'>{{salesmaster.leadsquantity }}</td>
+									<td style='text-align:center;'>{{salesmaster.freeflag }}</td>
+									<td style='text-align:center;'>{{salesmaster.freequantity }}</td>
+									<td style='text-align:center;'>{{salesmaster.totalquantity }}</td>
+									<td style='text-align:center;'>{{salesmaster.quotedamount }}</td>
+									<td style='text-align:center;'>{{salesmaster.discount }}</td>
+									<td style='text-align:center;'>{{salesmaster.sellingamount }}</td>
+									<td style='text-align:center;'>{{salesmaster.cgst }}</td>
+									<td style='text-align:center;'>{{salesmaster.sgst }}</td>
+									<td style='text-align:center;'>{{salesmaster.igst }}</td>
+									<td style='text-align:center;'>{{salesmaster.totalamount }}</td>
+									<td style='text-align:center;'>{{salesmaster.shippingaddress }}</td>
+									<td style='text-align:center;'>{{salesmaster.country }}</td>
+									<td style='text-align:center;'>{{salesmaster.state }}</td>
+									<td style='text-align:center;'>{{salesmaster.statecode }}</td>
+									<td style='text-align:center;'>{{salesmaster.city }}</td>
+									<td style='text-align:center;'>{{salesmaster.deliveredquantity }}</td>
+									<td style='text-align:center;'>{{salesmaster.balance }}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+                </div>
+                <div class='col-md-12' ng-show='filteredItems == 0'>
+                    <div class='col-md-12'>
+                        <h4>No Data found</h4> </div>
+                </div>
+            </div>
+            <div id='footer' style="background-color:white;font-size:20px">&#169;2016 DEEPTRACK DATA SYSTEMS PVT LTD. All Rights Reserved</div>
+        </div>
+    </div>
+</body>
+
+<script>
+	$(document).ready(function() {
+	$("#btnExport2").click(function(e) {
+	e.preventDefault();
+
+	//getting data from our table
+	var data_type = 'data:application/vnd.ms-excel';
+	var table_div = document.getElementById('table_wrapper2');
+
+	var table_html = table_div.outerHTML.replace(/ /g, '%20');
+
+	var a = document.createElement('a');
+	a.href = data_type + ', ' + table_html;
+	a.download = 'exported_table_' + Math.floor((Math.random() * 9999999) + 1000000) + '.xls';
+	a.click();
+  });
+  });
+</script>
+
+</html>

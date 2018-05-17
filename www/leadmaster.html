@@ -1,0 +1,655 @@
+<html>
+
+<head>
+    <link rel='stylesheet' href='css/main.css' type='text/css'>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' href='css/bootstrap.min.css'>
+    <link href='js/jquery.bootgrid.css' rel='stylesheet'>
+    <script src='js/jquery-3.1.1.js'></script>
+    <script src='js/jquery.slimscroll.js'></script>
+    <script src='js/angular.js'></script>
+    <script src='js/angular-route.min.js'></script>
+    <script src='js/ui-bootstrap-tpls-1.1.1.min.js'></script>
+    <script src='js/bootstrap-3.3.7.js'>
+    </script>
+    <script src='cjs/leadmaster.js'></script>
+    <style type='text/css'>
+        #footer {
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+            left: 0;
+            text-align: center;
+            height: 20px;
+            background: #E6E4E4;
+        }
+        
+        .input-group .icon-addon .form-control {
+            border-radius: 0;
+        }
+        
+        .icon-addon {
+            position: relative;
+            color: #555;
+            display: block;
+        }
+        
+        .icon-addon:after,
+        .icon-addon:before {
+            display: table;
+            content: ' ';
+        }
+        
+        .icon-addon:after {
+            clear: both;
+        }
+        
+        .icon-addon.addon-md .glyphicon,
+        .icon-addon .glyphicon,
+        .icon-addon.addon-md .fa,
+        .icon-addon .fa {
+            position: absolute;
+            z-index: 2;
+            left: 10px;
+            font-size: 14px;
+            margin-left: -2.5px;
+            text-align: center;
+            padding: 10px 0;
+            top: 1px
+        }
+        
+        .icon-addon.addon-lg .form-control {
+            line-height: 1.33;
+            height: 30px;
+            font-size: 13px;
+            padding: 10px 16px 10px 40px;
+        }
+        
+        .icon-addon.addon-lg .fa,
+        .icon-addon.addon-lg .glyphicon {
+            font-size: 13px;
+            margin-left: 0;
+            left: 11px;
+            top: -1px;
+            color: #512e90;
+        }
+		.nav-tabs { border-bottom: 2px solid #DDD; }
+		.nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover { border-width: 0; }
+		.nav-tabs > li > a { border: none; color: #666; }
+		.nav-tabs > li.active > a, .nav-tabs > li > a:hover { border: none; color: #4285F4 !important; background: transparent; }
+		.nav-tabs > li > a::after { content: ""; background: #4285F4; height: 2px; position: absolute; width: 100%; left: 0px; bottom: -1px; transition: all 250ms ease 0s; transform: scale(0); }
+		.nav-tabs > li.active > a::after, .nav-tabs > li:hover > a::after { transform: scale(1); }
+		.tab-nav > li > a::after { background: #21527d none repeat scroll 0% 0%; color: #fff; }
+		.tab-pane { padding: 15px 0; }
+		.tab-content{padding:20px}
+    </style>
+</head>
+
+<body ng-app='leadmasterApp' ng-controller='leadmasterController'>
+    <div class="wrapper">
+        <div ng-include="'mainmenu.html'"></div>
+        <div class="content-wrapper">
+            <div class="page-title">
+                <div>
+                    <h1><i class='fa fa-dashboard'></i> Lead Master</h1></div>
+                <div><a href='' data-toggle='modal' data-target='#myModalAdd' class='btn btn-primary btn-flat'><i class='fa fa-lg fa-plus'></i> <b>ADD</b></a></div>
+            </div>
+            <div class="modal modal-overlay" id="myModalAdd" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header" style="background-color:#512e90;color:white">
+                            <button type="button" class="pull-right" data-dismiss="modal" style="background-color:#512e90;color:white">X</button>
+                            <h4 class='modal-title' style='text-align:center'>ADD Lead Master </h4> </div>
+                        <div class="modal-body">
+                            <form class="form-horizontal" role="form" name="add_member">
+                                <div class="form-group">
+                                    <label class='col-sm-3 control-label'>Lead Id</label>
+                                    <div class='col-sm-8'>
+                                        <input type='text' class='form-control' ng-model='leadmasteradd.leadid' />
+                                    </div>
+                                </div>
+                                <div class='form-group'>
+                                    <label class='col-sm-3 control-label '>data Id</label>
+                                    <div class='col-sm-8'>
+                                        <input type='text' class='form-control' ng-model='leadmasteradd.dataid' />
+                                    </div>
+                                </div>
+                                <div class='form-group'>
+                                    <label class='col-sm-3 control-label '>Field Executive </label>
+                                    <div class='col-sm-8'>
+                                        <input type='text' class='form-control' ng-model='leadmasteradd.fieldexecutiveid' />
+                                    </div>
+                                </div>
+                                <div class='form-group'>
+                                    <label class='col-sm-3 control-label '>Product</label>
+                                    <div class='col-sm-8'>
+                                        <input type='text' class='form-control' ng-model='leadmasteradd.productid' />
+                                    </div>
+                                </div>
+                                <div class='form-group'>
+                                    <label class='col-sm-3 control-label '>Name</label>
+                                    <div class='col-sm-8'>
+                                        <input type='text' class='form-control' ng-model='leadmasteradd.productname' />
+                                    </div>
+                                </div>
+                                <div class='form-group'>
+                                    <label class='col-sm-3 control-label '>Status</label>
+                                    <div class='col-sm-8'>
+                                        <input type='text' class='form-control' ng-model='leadmasteradd.status' />
+                                    </div>
+                                </div>
+                                <div class='form-group'>
+                                    <label class='col-sm-3 control-label '>Verification</label>
+                                    <div class='col-sm-8'>
+                                        <input type='text' class='form-control' ng-model='leadmasteradd.verification' />
+                                    </div>
+                                </div>
+                                <div class='form-group'>
+                                    <label class='col-sm-3 control-label '>Appointment Date</label>
+                                    <div class='col-sm-8'>
+                                        <input type='text' class='form-control' ng-model='leadmasteradd.appointmentdate' />
+                                    </div>
+                                </div>
+                                <div class='form-group'>
+                                    <label class='col-sm-3 control-label '>Appointment Time</label>
+                                    <div class='col-sm-8'>
+                                        <input type='text' class='form-control' ng-model='leadmasteradd.appointmenttime' />
+                                    </div>
+                                </div>
+                                <div class='form-group'>
+                                    <label class='col-sm-3 control-label '>Fixed By</label>
+                                    <div class='col-sm-8'>
+                                        <input type='text' class='form-control' ng-model='leadmasteradd.fixedby' />
+                                    </div>
+                                </div>
+                                <div class='form-group'>
+                                    <label class='col-sm-3 control-label '>Allocated To</label>
+                                    <div class='col-sm-8'>
+                                        <input type='text' class='form-control' ng-model='leadmasteradd.allocatedto' />
+                                    </div>
+                                </div>
+                                <div class='form-group'>
+                                    <label class='col-sm-3 control-label '>Sales</label>
+                                    <div class='col-sm-8'>
+                                        <input type='text' class='form-control' ng-model='leadmasteradd.salesid' />
+                                    </div>
+                                </div>
+                                <div class='form-group'>
+                                    <label class='col-sm-3 control-label '>Remark</label>
+                                    <div class='col-sm-8'>
+                                        <input type='text' class='form-control' ng-model='leadmasteradd.remark' />
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class='modal-footer'>
+                            <div class='form-actions'>
+                                <div class="row">
+                                    <div class="col-lg-offset-6 col-lg-4">
+                                        <input type='button' class='btn btn-primary' value='submit' ng-click='addleadmaster()'>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal modal-overlay" id="myModalEdit" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header" style="background-color:#512e90;color:white">
+                            <button type="button" class="pull-right" data-dismiss="modal" style="background-color:#512e90;color:white">X</button>
+                            <h4 class='modal-title' style='text-align:center'>EDIT Lead Master </h4> </div>
+                        <div class='modal-body'>
+                            <form class='form-horizontal' role='form' name='edit_member' ng-repeat='leadmasteredit in getleadmasterdata'>
+                                
+                                <div class='form-group'>
+                                    <label class='col-sm-3 control-label'>Field Executive </label>
+                                    <div class='col-sm-8'>
+                                        <input class='form-control' type='text' ng-model='leadmasteredit.fieldexecutiveid' />
+                                    </div>
+                                </div>
+                                <div class='form-group'>
+                                    <label class='col-sm-3 control-label'>Product</label>
+                                    <div class='col-sm-8'>
+                                        <input class='form-control' type='text' ng-model='leadmasteredit.productid' />
+                                    </div>
+                                </div>
+                                <div class='form-group'>
+                                    <label class='col-sm-3 control-label'>Status</label>
+                                    <div class='col-sm-8'>
+                                        <input class='form-control' type='text' ng-model='leadmasteredit.status' />
+                                    </div>
+                                </div>
+                                <div class='form-group'>
+                                    <label class='col-sm-3 control-label'>Verification</label>
+                                    <div class='col-sm-8'>
+                                        <input class='form-control' type='text' ng-model='leadmasteredit.verification' />
+                                    </div>
+                                </div>
+                                <div class='form-group'>
+                                    <label class='col-sm-3 control-label'>Appointment Date</label>
+                                    <div class='col-sm-8'>
+                                        <input class='form-control' type='text' ng-model='leadmasteredit.appointmentdate' readonly />
+                                    </div>
+                                </div>
+                                <div class='form-group'>
+                                    <label class='col-sm-3 control-label'>Appointment Time</label>
+                                    <div class='col-sm-8'>
+                                        <input class='form-control' type='text' ng-model='leadmasteredit.appointmenttime' readonly />
+                                    </div>
+                                </div>
+                                <div class='form-group'>
+                                    <label class='col-sm-3 control-label'>Fixed By</label>
+                                    <div class='col-sm-8'>
+                                        <input class='form-control' type='text' ng-model='leadmasteredit.fixedby' />
+                                    </div>
+                                </div>
+                                <div ng-if='leadmasteredit.allocatedto!=null' class='form-group'>
+                                    <label class='col-sm-3 control-label'>Allocated To</label>
+									<div class='col-sm-8' ng-init="listsalesuser()" >
+										<select class="form-control"  ng-model="leadmasteredit.allocatedto" ng-options="x.userid as x.name for x in listsalesuserdata" disabled >
+										<option value=""> Select Sales Person</option>
+										</select>
+										
+									</div>
+                                </div>
+								<div ng-if='leadmasteredit.allocatedto==null' class='form-group'>
+                                    <label class='col-sm-3 control-label'>Allocated To</label>
+									<div class='col-sm-8' ng-init="listsalesuser()" >
+										<select class="form-control"  ng-model="leadmasteredit.allocatedto" ng-options="x.userid as x.name for x in listsalesuserdata"  >
+										<option value=""> Select Sales Person</option>
+										</select>
+										
+									</div>
+                                </div>
+								<div class='form-group'>
+                                    <label class='col-sm-3 control-label'>Area</label>
+                                    <div class='col-sm-8'>
+                                        <input class='form-control' type='text' ng-model='leadmasteredit.area' disabled/>
+                                    </div>
+                                </div>
+                                <div class='form-group'>
+                                    <label class='col-sm-3 control-label'>Sales</label>
+                                    <div class='col-sm-8'>
+                                        <input class='form-control' type='text' ng-model='leadmasteredit.salesid' />
+                                    </div>
+                                </div>
+                                <div class='form-group'>
+                                    <label class='col-sm-3 control-label'>Remark</label>
+                                    <div class='col-sm-8'>
+                                        <input class='form-control' type='text' ng-model='leadmasteredit.remark' />
+                                    </div>
+                                </div>
+                        </div>
+                        </form>
+                        <div class="modal-footer">
+                            <div class="form-actions">
+                                <div class="row">
+                                    <div class="col-lg-offset-6 col-lg-4">
+                                        <input type='button' class='btn btn-primary' value='submit' ng-click='editleadmaster()'>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class='row'>
+				<div class='col-md-3 '>
+					<button class="btn"><i id="btnExport2" class="fa fa-file-excel-o" style="color:green;font-size:20px">Excel</i></button>
+				</div>
+				
+                <div class='col-md-offset-3 col-md-3 '>
+                    <div class='icon-addon addon-lg'>
+                        <input type='search' ng-model='search' class='form-control input-sm w-lg inline m-r' placeholder='Search'>
+                        <label for='search' class='glyphicon glyphicon-search' rel='tooltip' title='search'></label>
+                    </div>
+                </div>
+                <div class=" col-md-3 ">
+                    <button style='border:none;background:white;color:#512e90;' ng-disabled='currentPage == 0' class='glyphicon glyphicon-chevron-left' ng-click='currentPage=currentPage-1'></button><b>  {{currentPage+1}} / {{numberOfPages()}} </b>
+                    <input type='number' min='1' max='{{maxpage}}' ng-change='checkcurrpage(myValue)' style='width:35%' ng-model='myValue'>
+                    <button style='border:none;background:white;color:#512e90' class='glyphicon glyphicon-chevron-right' ng-disabled='currentPage >= listleadmasterdata.length/pageSize - 1' ng-click='currentPage=currentPage+1'></button>
+                </div>
+            </div>
+            <div class='row'>
+				<ul class="nav nav-tabs" role="tablist">
+					<li role="presentation" class="active">
+						<a href="#menu1" aria-controls="menu1" role="tab" data-toggle="tab">Not Allocatedto</a>
+					</li>
+					<li role="presentation">
+						<a href="#menu2" aria-controls="menu2" role="tab" data-toggle="tab">Allocated</a>
+					</li>
+				</ul>
+				<div class="tab-content">
+					<div role="tabpanel" class="tab-pane active " id="menu1">
+						<div class="row" >
+							<!-- <div class="col-sm-6">
+								<div class='col-sm-5' ng-init="listcitygroup()" >
+											
+											<input type="text" class="form-control" ng-model="city" typeahead-template-url="listTpl1.html" typeahead-editable="false" uib-typeahead="x as x.city for x in listcitygroupdata | filter: $viewValue" placeholder="Select City" typeahead-on-select="addcapablity(city)" />
+											
+											<script type="text/ng-template" id="listTpl1.html">
+												<table class=">
+													<tr>
+														<td>
+															<div ng-mouseenter="selectActive($index)" ng-click="selectMatch($index)">
+																<a>{{match.model.city}}</a>
+															</div>
+														</td>
+													</tr>
+												</table>
+											</script>
+											
+											
+											 <select class="form-control"   ng-model="city" ng-options="x as x.city for x in listcitygroupdata" ng-change="addcapablity(city)">
+												<option value=""> Select City</option>
+											</select> 
+								</div>
+							</div> -->
+							<div class='col-sm-6'>
+								<div class='col-sm-5' ng-init="listsalesuser()" >
+									<!-- <label >Sales Person</label> -->
+									<select class="form-control"  ng-model="SelectedProducts.allocatedto" ng-options="x as x.user for x in listsalesuserdata" ng-change="onselectbulk(SelectedProducts.allocatedto)" >
+									<option value=""> Select Sales Person</option>
+									</select>
+									
+								</div>	
+								<div class='col-sm-1'>		
+									 <input type='button' class='btn btn-info' value='submit' ng-click='multiplesale();SelectedProducts=""'>
+								</div>	
+							</div>	
+							
+						</div>
+						<div class="row ">
+							<div class="table-responsive">
+								<table class="table">
+									<tr>
+										<td ng-repeat="x in getbulkareadata"><button class="btn btn-default"  ng-click="deletecapablity(x)" readonly>{{x.city}} <span class="glyphicon glyphicon-remove"  ></span> </button></td>
+									</tr>
+								</table>
+							</div>
+						</div>
+						<div class='table-responsive'><br>
+							<table style='font-size:14px;' class='table table-striped table-bordered'>
+								<thead style="background-color:#512e90">
+									<th style='text-align:center'>
+										<a href='#' style='text-decoration:none;color:white' ng-click="sortType = 'leadid'; sortReverse = !sortReverse"> <b>Check</b> <span ng-show="sortType= 'leadid' && !sortReverse" style='font-size:10px;' class='glyphicon glyphicon-triangle-bottom'></span> <span ng-show="sortType = 'leadid' && sortReverse" style='font-size:10px' class='glyphicon glyphicon-triangle-top'></span> </a>
+									</th>
+									<th style='text-align:center'>
+										<a href='#' style='text-decoration:none;color:white' ng-click="sortType = 'leadid'; sortReverse = !sortReverse"> <b>Lead Id</b> <span ng-show="sortType= 'leadid' && !sortReverse" style='font-size:10px;' class='glyphicon glyphicon-triangle-bottom'></span> <span ng-show="sortType = 'leadid' && sortReverse" style='font-size:10px' class='glyphicon glyphicon-triangle-top'></span> </a>
+									</th>
+									<th style='text-align:center'>
+										<a href='#' style='text-decoration:none;color:white' ng-click="sortType = 'fieldexecutiveid'; sortReverse = !sortReverse"> <b>Field Executive </b> <span ng-show="sortType= 'fieldexecutiveid' && !sortReverse" style='font-size:10px;' class='glyphicon glyphicon-triangle-bottom'></span> <span ng-show="sortType = 'fieldexecutiveid' && sortReverse" style='font-size:10px' class='glyphicon glyphicon-triangle-top'></span> </a>
+									</th>
+									<th style='text-align:center'>
+										<a href='#' style='text-decoration:none;color:white' ng-click="sortType = 'productid'; sortReverse = !sortReverse"> <b>Product</b> <span ng-show="sortType= 'productid' && !sortReverse" style='font-size:10px;' class='glyphicon glyphicon-triangle-bottom'></span> <span ng-show="sortType = 'productid' && sortReverse" style='font-size:10px' class='glyphicon glyphicon-triangle-top'></span> </a>
+									</th>
+									
+									<th style='text-align:center'>
+										<a href='#' style='text-decoration:none;color:white' ng-click="sortType = 'status'; sortReverse = !sortReverse"> <b>Status</b> <span ng-show="sortType= 'status' && !sortReverse" style='font-size:10px;' class='glyphicon glyphicon-triangle-bottom'></span> <span ng-show="sortType = 'status' && sortReverse" style='font-size:10px' class='glyphicon glyphicon-triangle-top'></span> </a>
+									</th>
+									<th style='text-align:center'>
+										<a href='#' style='text-decoration:none;color:white' ng-click="sortType = 'verification'; sortReverse = !sortReverse"> <b>Verification</b> <span ng-show="sortType= 'verification' && !sortReverse" style='font-size:10px;' class='glyphicon glyphicon-triangle-bottom'></span> <span ng-show="sortType = 'verification' && sortReverse" style='font-size:10px' class='glyphicon glyphicon-triangle-top'></span> </a>
+									</th>
+									<th style='text-align:center'>
+										<a href='#' style='text-decoration:none;color:white' ng-click="sortType = 'appointmentdate'; sortReverse = !sortReverse"> <b>Appointment Date</b> <span ng-show="sortType= 'appointmentdate' && !sortReverse" style='font-size:10px;' class='glyphicon glyphicon-triangle-bottom'></span> <span ng-show="sortType = 'appointmentdate' && sortReverse" style='font-size:10px' class='glyphicon glyphicon-triangle-top'></span> </a>
+									</th>
+									<th style='text-align:center'>
+										<a href='#' style='text-decoration:none;color:white' ng-click="sortType = 'appointmenttime'; sortReverse = !sortReverse"> <b>Appointment Time</b> <span ng-show="sortType= 'appointmenttime' && !sortReverse" style='font-size:10px;' class='glyphicon glyphicon-triangle-bottom'></span> <span ng-show="sortType = 'appointmenttime' && sortReverse" style='font-size:10px' class='glyphicon glyphicon-triangle-top'></span> </a>
+									</th>
+									<!-- <th style='text-align:center'>
+										<a href='#' style='text-decoration:none;color:white' ng-click="sortType = 'fixedby'; sortReverse = !sortReverse"> <b>Fixed By</b> <span ng-show="sortType= 'fixedby' && !sortReverse" style='font-size:10px;' class='glyphicon glyphicon-triangle-bottom'></span> <span ng-show="sortType = 'fixedby' && sortReverse" style='font-size:10px' class='glyphicon glyphicon-triangle-top'></span> </a>
+									</th> -->
+									<th style='text-align:center'>
+										<a href='#' style='text-decoration:none;color:white' ng-click="sortType = 'allocatedto'; sortReverse = !sortReverse"> <b>Allocated To</b> <span ng-show="sortType= 'allocatedto' && !sortReverse" style='font-size:10px;' class='glyphicon glyphicon-triangle-bottom'></span> <span ng-show="sortType = 'allocatedto' && sortReverse" style='font-size:10px' class='glyphicon glyphicon-triangle-top'></span> </a>
+									</th>
+									<th style='text-align:center'>
+										<a href='#' style='text-decoration:none;color:white' ng-click="sortType = 'salesid'; sortReverse = !sortReverse"> <b>Sales</b> <span ng-show="sortType= 'salesid' && !sortReverse" style='font-size:10px;' class='glyphicon glyphicon-triangle-bottom'></span> <span ng-show="sortType = 'salesid' && sortReverse" style='font-size:10px' class='glyphicon glyphicon-triangle-top'></span> </a>
+									</th>
+									<!-- <th style='text-align:center'>
+										<a href='#' style='text-decoration:none;color:white' ng-click="sortType = 'remark'; sortReverse = !sortReverse"> <b>Remark</b> <span ng-show="sortType= 'remark' && !sortReverse" style='font-size:10px;' class='glyphicon glyphicon-triangle-bottom'></span> <span ng-show="sortType = 'remark' && sortReverse" style='font-size:10px' class='glyphicon glyphicon-triangle-top'></span> </a>
+									</th> -->
+									<th style='text-align:center;'><b style='color:white'>Action</b></th>
+								</thead>
+								<tbody ng-init='listleadmaster()'>
+									<tr ng-repeat='leadmaster in listleadmasterdata |filter:{allocatedto:null} |filter:search | startFrom:currentPage*pageSize | limitTo:pageSize  | orderBy:sortType:sortReverse'>
+										<td class="text-center"><input type="checkbox" id="{{$index}}" ng-change="syncfordelete(leadmaster.leadid)" ng-model="lead.leadid" ng-checked="isCheckeddelete(leadmaster.leadid)"> <label for="{{$index}}"></label></td>
+										<td style='text-align:center;'>{{leadmaster.leadid }}</td>
+										<td style='text-align:center;'>{{leadmaster.fieldexecutiveid }}</td>
+										<td style='text-align:center;'>{{leadmaster.product }}</td>
+										<td style='text-align:center;'>{{leadmaster.status }}</td>
+										<td style='text-align:center;'>{{leadmaster.verification }}</td>
+										<td style='text-align:center;'>{{leadmaster.appointmentdate }}</td>
+										<td style='text-align:center;'>{{leadmaster.appointmenttime }}</td>
+										<!-- <td style='text-align:center;'>{{leadmaster.fixedby }}</td> -->
+										<td style='text-align:center;'>{{leadmaster.user }}</td>
+										<td style='text-align:center;'>{{leadmaster.salesid }}</td>
+										<!-- <td style='text-align:center;'>{{leadmaster.remark }}</td> -->
+										<td style='text-align:center;'><a href='' ng-click='getleadmaster(leadmaster.leadid)' data-toggle='modal' data-target='#myModalEdit'>Edit</a> | <a href='#' ng-click='deleteleadmaster(leadmaster.leadid)'>Delete</a></td>
+									</tr>
+								</tbody>
+							</table>
+							<div id="table_wrapper2" style="display:none" >
+								<table style='font-size:14px;' class='table table-striped table-bordered' border="1" cellspacing="0" bordercolor="#222">
+									<thead style="background-color:#512e90">
+										<th style='text-align:center'>
+											Lead Id
+										</th>
+										<th style='text-align:center'>
+											data Id 
+										</th>
+										<th style='text-align:center'>
+											Field Executive Id
+										</th>
+										<th style='text-align:center'>
+											Product Id 
+										</th>
+										<th style='text-align:center'>
+											Product Name
+										</th>
+										<th style='text-align:center'>
+											Status
+										</th>
+										<th style='text-align:center'>
+											Verification
+										</th>
+										<th style='text-align:center'>
+											Appointment Date
+										</th>
+										<th style='text-align:center'>
+											Appointment Time
+										</th>
+										<th style='text-align:center'>
+											Fixed By
+										</th>
+										<th style='text-align:center'>
+											Allocated To
+										</th>
+										<th style='text-align:center'>
+											Sales Id
+										</th>
+										<th style='text-align:center'>
+											Remark
+										</th>
+									</thead>
+									<tbody>
+										<tr ng-repeat='leadmaster in listleadmasterdata  |filter:search '>
+											 <td style='text-align:center;'>{{leadmaster.leadid }}</td>
+											<td style='text-align:center;'>{{leadmaster.dataid }}</td>
+											<td style='text-align:center;'>{{leadmaster.fieldexecutiveid }}</td>
+											<td style='text-align:center;'>{{leadmaster.product }}</td>
+											<td style='text-align:center;'>{{leadmaster.productname }}</td>
+											<td style='text-align:center;'>{{leadmaster.status }}</td>
+											<td style='text-align:center;'>{{leadmaster.verification }}</td>
+											<td style='text-align:center;'>{{leadmaster.appointmentdate || date }}</td>
+											<td style='text-align:center;'>{{leadmaster.appointmenttime }}</td>
+											<td style='text-align:center;'>{{leadmaster.fixedby }}</td>
+											<td style='text-align:center;'>{{leadmaster.user }}</td>
+											<td style='text-align:center;'>{{leadmaster.salesid }}</td>
+											<td style='text-align:center;'>{{leadmaster.remark }}</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+						<div class='col-md-12' ng-show='listquotationunconfirmdata == 0'>
+							<div class='col-md-12'>
+								<h4>No Data found</h4> 
+							</div>
+						</div>
+					</div>
+                
+				<div role="tabpanel" class="tab-pane " id="menu2">
+						<div class='table-responsive'><br>
+							<table style='font-size:14px;' class='table table-striped table-bordered'>
+								<thead style="background-color:#512e90">
+									<th style='text-align:center'>
+										<a href='#' style='text-decoration:none;color:white' ng-click="sortType = 'leadid'; sortReverse = !sortReverse"> <b>Lead Id</b> <span ng-show="sortType= 'leadid' && !sortReverse" style='font-size:10px;' class='glyphicon glyphicon-triangle-bottom'></span> <span ng-show="sortType = 'leadid' && sortReverse" style='font-size:10px' class='glyphicon glyphicon-triangle-top'></span> </a>
+									</th>
+									<th style='text-align:center'>
+										<a href='#' style='text-decoration:none;color:white' ng-click="sortType = 'fieldexecutiveid'; sortReverse = !sortReverse"> <b>Field Executive </b> <span ng-show="sortType= 'fieldexecutiveid' && !sortReverse" style='font-size:10px;' class='glyphicon glyphicon-triangle-bottom'></span> <span ng-show="sortType = 'fieldexecutiveid' && sortReverse" style='font-size:10px' class='glyphicon glyphicon-triangle-top'></span> </a>
+									</th>
+									<th style='text-align:center'>
+										<a href='#' style='text-decoration:none;color:white' ng-click="sortType = 'productid'; sortReverse = !sortReverse"> <b>Product</b> <span ng-show="sortType= 'productid' && !sortReverse" style='font-size:10px;' class='glyphicon glyphicon-triangle-bottom'></span> <span ng-show="sortType = 'productid' && sortReverse" style='font-size:10px' class='glyphicon glyphicon-triangle-top'></span> </a>
+									</th>
+									<th style='text-align:center'>
+										<a href='#' style='text-decoration:none;color:white' ng-click="sortType = 'status'; sortReverse = !sortReverse"> <b>Status</b> <span ng-show="sortType= 'status' && !sortReverse" style='font-size:10px;' class='glyphicon glyphicon-triangle-bottom'></span> <span ng-show="sortType = 'status' && sortReverse" style='font-size:10px' class='glyphicon glyphicon-triangle-top'></span> </a>
+									</th>
+									<th style='text-align:center'>
+										<a href='#' style='text-decoration:none;color:white' ng-click="sortType = 'verification'; sortReverse = !sortReverse"> <b>Verification</b> <span ng-show="sortType= 'verification' && !sortReverse" style='font-size:10px;' class='glyphicon glyphicon-triangle-bottom'></span> <span ng-show="sortType = 'verification' && sortReverse" style='font-size:10px' class='glyphicon glyphicon-triangle-top'></span> </a>
+									</th>
+									<th style='text-align:center'>
+										<a href='#' style='text-decoration:none;color:white' ng-click="sortType = 'appointmentdate'; sortReverse = !sortReverse"> <b>Appointment Date</b> <span ng-show="sortType= 'appointmentdate' && !sortReverse" style='font-size:10px;' class='glyphicon glyphicon-triangle-bottom'></span> <span ng-show="sortType = 'appointmentdate' && sortReverse" style='font-size:10px' class='glyphicon glyphicon-triangle-top'></span> </a>
+									</th>
+									<th style='text-align:center'>
+										<a href='#' style='text-decoration:none;color:white' ng-click="sortType = 'appointmenttime'; sortReverse = !sortReverse"> <b>Appointment Time</b> <span ng-show="sortType= 'appointmenttime' && !sortReverse" style='font-size:10px;' class='glyphicon glyphicon-triangle-bottom'></span> <span ng-show="sortType = 'appointmenttime' && sortReverse" style='font-size:10px' class='glyphicon glyphicon-triangle-top'></span> </a>
+									</th>
+									<!-- <th style='text-align:center'>
+										<a href='#' style='text-decoration:none;color:white' ng-click="sortType = 'fixedby'; sortReverse = !sortReverse"> <b>Fixed By</b> <span ng-show="sortType= 'fixedby' && !sortReverse" style='font-size:10px;' class='glyphicon glyphicon-triangle-bottom'></span> <span ng-show="sortType = 'fixedby' && sortReverse" style='font-size:10px' class='glyphicon glyphicon-triangle-top'></span> </a>
+									</th> -->
+									<th style='text-align:center'>
+										<a href='#' style='text-decoration:none;color:white' ng-click="sortType = 'allocatedto'; sortReverse = !sortReverse"> <b>Allocated To</b> <span ng-show="sortType= 'allocatedto' && !sortReverse" style='font-size:10px;' class='glyphicon glyphicon-triangle-bottom'></span> <span ng-show="sortType = 'allocatedto' && sortReverse" style='font-size:10px' class='glyphicon glyphicon-triangle-top'></span> </a>
+									</th>
+									<th style='text-align:center'>
+										<a href='#' style='text-decoration:none;color:white' ng-click="sortType = 'salesid'; sortReverse = !sortReverse"> <b>Sales</b> <span ng-show="sortType= 'salesid' && !sortReverse" style='font-size:10px;' class='glyphicon glyphicon-triangle-bottom'></span> <span ng-show="sortType = 'salesid' && sortReverse" style='font-size:10px' class='glyphicon glyphicon-triangle-top'></span> </a>
+									</th>
+									<!-- <th style='text-align:center'>
+										<a href='#' style='text-decoration:none;color:white' ng-click="sortType = 'remark'; sortReverse = !sortReverse"> <b>Remark</b> <span ng-show="sortType= 'remark' && !sortReverse" style='font-size:10px;' class='glyphicon glyphicon-triangle-bottom'></span> <span ng-show="sortType = 'remark' && sortReverse" style='font-size:10px' class='glyphicon glyphicon-triangle-top'></span> </a>
+									</th> -->
+									<th style='text-align:center;'><b style='color:white'>Action</b></th>
+								</thead>
+								<tbody ng-init='listleadmaster()'>
+									<tr ng-if='leadmaster.allocatedto!=null' ng-repeat='leadmaster in listleadmasterdata  |filter:search | startFrom:currentPage*pageSize | limitTo:pageSize  | orderBy:sortType:sortReverse'>
+										<td style='text-align:center;'>{{leadmaster.leadid }}</td>
+										<td style='text-align:center;'>{{leadmaster.fieldexecutiveid }}</td>
+										<td style='text-align:center;'>{{leadmaster.product }}</td>
+										<td style='text-align:center;'>{{leadmaster.status }}</td>
+										<td style='text-align:center;'>{{leadmaster.verification }}</td>
+										<td style='text-align:center;'>{{leadmaster.appointmentdate }}</td>
+										<td style='text-align:center;'>{{leadmaster.appointmenttime }}</td>
+										<!-- <td style='text-align:center;'>{{leadmaster.fixedby }}</td> -->
+										<td style='text-align:center;'>{{leadmaster.user }}</td>
+										<td style='text-align:center;'>{{leadmaster.salesid }}</td>
+										<!-- <td style='text-align:center;'>{{leadmaster.remark }}</td> -->
+										<td style='text-align:center;'><a href='' ng-click='getleadmaster(leadmaster.leadid)' data-toggle='modal' data-target='#myModalEdit'>Edit</a> | <a href='#' ng-click='deleteleadmaster(leadmaster.leadid)'>Delete</a></td>
+									</tr>
+								</tbody>
+							</table>
+							<div id="table_wrapper2" style="display:none" >
+								<table style='font-size:14px;' class='table table-striped table-bordered' border="1" cellspacing="0" bordercolor="#222">
+									<thead style="background-color:#512e90">
+										<th style='text-align:center'>
+											Lead Id
+										</th>
+										<th style='text-align:center'>
+											data Id 
+										</th>
+										<th style='text-align:center'>
+											Field Executive Id
+										</th>
+										<th style='text-align:center'>
+											Product Id 
+										</th>
+										<th style='text-align:center'>
+											Product Name
+										</th>
+										<th style='text-align:center'>
+											Status
+										</th>
+										<th style='text-align:center'>
+											Verification
+										</th>
+										<th style='text-align:center'>
+											Appointment Date
+										</th>
+										<th style='text-align:center'>
+											Appointment Time
+										</th>
+										<th style='text-align:center'>
+											Fixed By
+										</th>
+										<th style='text-align:center'>
+											Allocated To
+										</th>
+										<th style='text-align:center'>
+											Sales Id
+										</th>
+										<th style='text-align:center'>
+											Remark
+										</th>
+									</thead>
+									<tbody>
+										<tr ng-repeat='leadmaster in listleadmasterdata  |filter:search '>
+											 <td style='text-align:center;'>{{leadmaster.leadid }}</td>
+											<td style='text-align:center;'>{{leadmaster.dataid }}</td>
+											<td style='text-align:center;'>{{leadmaster.fieldexecutiveid }}</td>
+											<td style='text-align:center;'>{{leadmaster.product }}</td>
+											<td style='text-align:center;'>{{leadmaster.productname }}</td>
+											<td style='text-align:center;'>{{leadmaster.status }}</td>
+											<td style='text-align:center;'>{{leadmaster.verification }}</td>
+											<td style='text-align:center;'>{{leadmaster.appointmentdate || date }}</td>
+											<td style='text-align:center;'>{{leadmaster.appointmenttime }}</td>
+											<td style='text-align:center;'>{{leadmaster.fixedby }}</td>
+											<td style='text-align:center;'>{{leadmaster.user }}</td>
+											<td style='text-align:center;'>{{leadmaster.salesid }}</td>
+											<td style='text-align:center;'>{{leadmaster.remark }}</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+						<div class='col-md-12' ng-show='listquotationunconfirmdata == 0'>
+							<div class='col-md-12'>
+								<h4>No Data found</h4> 
+							</div>
+						</div>
+				</div>
+				
+            </div>
+            <div id='footer' style="background-color:white;font-size:20px">&#169;2016 DEEPTRACK DATA SYSTEMS PVT LTD. All Rights Reserved</div>
+        </div>
+    </div>
+</body>
+
+<script>
+		$(document).ready(function() {
+		$("#btnExport2").click(function(e) {
+		e.preventDefault();
+
+		//getting data from our table
+		var data_type = 'data:application/vnd.ms-excel';
+		var table_div = document.getElementById('table_wrapper2');
+	
+		var table_html = table_div.outerHTML.replace(/ /g, '%20');
+
+		var a = document.createElement('a');
+		a.href = data_type + ', ' + table_html;
+		a.download = 'exported_table_' + Math.floor((Math.random() * 9999999) + 1000000) + '.xls';
+		a.click();
+	  });
+	  });
+</script>
+
+</html>

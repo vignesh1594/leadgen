@@ -1,0 +1,216 @@
+<html>
+<head>
+    <link rel='stylesheet' href='css/main.css' type='text/css'/>
+    <meta charset='utf-8'/>
+    <meta name='viewport' content='width=device-width, initial-scale=1'/>
+    <link rel='stylesheet' href='css/bootstrap.min.css'>
+    <link href='js/jquery.bootgrid.css' rel='stylesheet'>
+    <script src='js/jquery-3.1.1.js'></script>
+	<!--   <script src='js/jquery.slimscroll.js'></script> -->
+    <script src='js/angular.js'></script>
+    <script src='js/angular-route.min.js'></script>
+    <script src='js/ui-bootstrap-tpls-1.1.1.min.js'></script>
+    <script src='js/bootstrap-3.3.7.js'></script>
+    <script src='cjs/teledashboard.js'></script>
+    <script src='js/socket.io.js'></script>
+    <style type='text/css'>
+        #footer {
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+            left: 0;
+            text-align: center;
+            height: 20px;
+            background: #E6E4E4;
+        }
+        .input-group .icon-addon .form-control {
+            border-radius: 0;
+        }
+        .icon-addon {
+            position: relative;
+            color: #555;
+            display: block;
+        }
+        .icon-addon:after,
+        .icon-addon:before {
+            display: table;
+            content: ' ';
+        }
+        .icon-addon:after {
+            clear: both;
+        }
+        .icon-addon.addon-md .glyphicon,
+        .icon-addon .glyphicon,
+        .icon-addon.addon-md .fa,
+        .icon-addon .fa {
+            position: absolute;
+            z-index: 2;
+            left: 10px;
+            font-size: 14px;
+            margin-left: -2.5px;
+            text-align: center;
+            padding: 10px 0;
+            top: 1px
+        }
+        .icon-addon.addon-lg .form-control {
+            line-height: 1.33;
+            height: 30px;
+            font-size: 13px;
+            padding: 10px 16px 10px 40px;
+        }
+        .icon-addon.addon-lg .fa,
+        .icon-addon.addon-lg .glyphicon {
+            font-size: 13px;
+            margin-left: 0;
+            left: 11px;
+            top: -1px;
+            color: #512e90;
+        }
+    </style>
+
+</head>
+
+<body ng-app='datamasterApp' ng-controller='datamasterController'>
+    <div class="wrapper">
+        <div ng-include="'mainmenu.html'"></div>
+        <div class="content-wrapper" ng-init="callonload();listareamaster();getproductdetails();">
+            <div class="page-title">
+                <div>
+                    <h1><i class='fa fa-dashboard'></i> Data Master</h1>
+				</div>
+            </div>
+            <div class='row'>
+				<form class="form-horizontal" role="form" name="add_member" >	
+                    <div class='form-group'>
+						<div class='col-sm-6'>
+						<span style="font-weight:bold" ></span>
+							<label  >{{min}}:{{sec}} </label>
+							<input type='text' class='form-control' ng-model='datamasteradd.name' />
+						</div>
+                    </div>
+                    <div class='form-group'>
+						<div class='col-sm-4'>
+							<label >Address</label>
+							<textarea class='form-control' ng-model='datamasteradd.address'></textarea>
+						</div>
+						<div class='col-sm-4'>
+							<label>Nearest Railway Station</label>
+							<input type="text" class="form-control" ng-model="datamasteradd.area" typeahead-template-url="listTpl.html" typeahead-editable="false" uib-typeahead="x as x.area for x in listareamasterdata | filter: $viewValue"  typeahead-on-select="onselectarea($item);"/>
+							<script type="text/ng-template" id="listTpl.html">
+								<table>
+									<tr>
+										<td>
+											<div ng-mouseenter="selectActive($index)" ng-click="selectMatch($index)">
+												<a>{{match.model.area}}</a>
+											</div>
+										</td>
+									</tr>
+								</table>
+							</script>
+                        </div>
+						<div class='col-sm-4'>
+							<label >Railway Line</label>
+							<input type='text' class='form-control' ng-model='datamasteradd.route' readonly />
+						</div>
+					</div>
+					<div class='form-group'>
+						<div class='col-sm-6'>
+							 <label>Mobile No. 1</label>
+							<input type='number' class='form-control' ng-model='datamasteradd.mobileno1' maxlength="10" />
+						</div>
+						<div class='col-sm-6'>
+							<label >Mobile No. 2</label>
+							<input type='number' class='form-control' ng-model='datamasteradd.mobileno2' maxlength="10"/>
+						</div>
+					</div>
+					<div class='form-group'>
+						<div class='col-sm-4'>
+							<label>Email 1</label>
+							<input type='text' class='form-control' ng-model='datamasteradd.emailid1' />
+						</div>
+						<div class='col-sm-4'>
+							<label>Email 2</label>
+							<input type='text' class='form-control' ng-model='datamasteradd.emailid2' />
+						</div>
+						<div class='col-sm-4'>
+							<label>Monthly Income</label>
+							<input type='number' class='form-control' ng-model='datamasteradd.monthlyincome' /><br>
+						</div>
+					</div>
+					<div ng-if="getformdetailsdata.length>0" class="form-group" ng-repeat="x in getformdetailsdata">
+						<div class='col-sm-4'>
+							<label>{{x.question}}</label>
+						</div>
+						<div class="col-sm-8">
+							<input type='text' class='form-control' ng-model='x.answer' />
+						</div>
+					</div>			
+					<div ng-if="getformdetailsdata.length==0 || getformdetailsdata.length==undefined " class="form-group" ng-repeat="x in getproductdetailsdata">
+						<div class='col-sm-4'>
+							<label>{{x.question}}</label>
+						</div>
+						<div class="col-sm-8">
+							<input type='text' class='form-control' ng-model='x.answer' />
+						</div>
+					</div>
+					<div class='form-group'>
+						<div class='col-sm-12'>
+							<div class='col-sm-3'>
+								<label>Ringing (Didn't Pickup)</label><br>
+								<input type="radio"   value="Ringing" ng-model='datamasteradd.status' />
+							</div>
+							<div class='col-sm-2'>
+								<label>Incorrect Number</label><br>
+								 <input type="radio"  value="Incorrect Number" ng-model='datamasteradd.status' />
+							</div>
+							<div class='col-sm-2'>
+								<label>Not Interested</label><br>
+								 <input type="radio"  value="Not Interested" ng-model='datamasteradd.status' />
+							</div>
+							<div class='col-sm-3'>
+								<label>Rescheduled</label><br>
+								 <input type="radio"   value="Rescheduled" ng-model='datamasteradd.status' />
+							</div>
+							<div class='col-sm-2'>
+								<label>Appointment</label><br>
+								 <input type="radio"  value="Appointment" ng-model='datamasteradd.status' />
+							</div>
+						</div>
+					</div>
+					<!-- <div class='form-group'>
+						<div ng-if="datamasteradd.status=='Rescheduled'" class=' col-sm-3'>
+							<label>Date</label>
+							<input type='date' class='form-control' ng-model='datamasteradd.rescheduletodate'/><br>
+						</div>
+						<div ng-if="datamasteradd.status=='Rescheduled'" class=' col-sm-3'>
+							<label>Time</label>
+							<input type='time' class='form-control' ng-model='datamasteradd.rescheduletime'/><br>
+						</div>
+					</div> -->
+					<div class='col-sm-6'>
+						<label>Remark</label>
+						<textarea type="text" class='form-control' ng-model='datamasteradd.remark'/></textarea><br>
+					</div>
+					<div ng-if="datamasteradd.status=='Appointment'||datamasteradd.status=='Rescheduled'" class='col-sm-3'>
+						<label>Date</label>
+						<input type='date' class='form-control' ng-model='datamasteradd.rescheduletodate'/><br>
+					</div>
+					<div ng-if="datamasteradd.status=='Appointment'||datamasteradd.status=='Rescheduled'" class=' col-sm-2'>
+						<label>Time</label>
+						<input type='time' class='form-control' ng-model='datamasteradd.rescheduletime'/><br>
+					</div>
+				</form>  
+            </div>
+			<div class='form-actions'>
+				<div class="row">
+					<div class="col-lg-offset-6 col-lg-4">
+						<input type='button' class='btn btn-primary' value='submit' ng-click='leadupdate()'>
+					</div>
+				</div>
+            </div>   
+            <div id='footer' style="background-color:white;font-size:20px">&#169;2016 DEEPTRACK DATA SYSTEMS PVT LTD. All Rights Reserved</div>
+        </div>
+    </div>
+</body>
+
+</html>
